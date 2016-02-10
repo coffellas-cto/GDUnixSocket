@@ -14,6 +14,9 @@
 		9A0130E51C6BB97900795EA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A0130E41C6BB97900795EA8 /* Assets.xcassets */; };
 		9A0130E81C6BB97900795EA8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A0130E61C6BB97900795EA8 /* LaunchScreen.storyboard */; };
 		9A0130F31C6BB97900795EA8 /* GDUnixSocketExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0130F21C6BB97900795EA8 /* GDUnixSocketExampleTests.m */; };
+		9A0131001C6BBA1300795EA8 /* GDUnixSocketConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0130FF1C6BBA1300795EA8 /* GDUnixSocketConnection.m */; };
+		9A0131031C6BC81500795EA8 /* GDUnixSocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0131021C6BC81500795EA8 /* GDUnixSocketClient.m */; };
+		9A0131071C6BCE4200795EA8 /* GDUnixSocketServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0131061C6BCE4200795EA8 /* GDUnixSocketServer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,13 @@
 		9A0130EE1C6BB97900795EA8 /* GDUnixSocketExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GDUnixSocketExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A0130F21C6BB97900795EA8 /* GDUnixSocketExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketExampleTests.m; sourceTree = "<group>"; };
 		9A0130F41C6BB97900795EA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9A0130FE1C6BBA1300795EA8 /* GDUnixSocketConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketConnection.h; sourceTree = "<group>"; };
+		9A0130FF1C6BBA1300795EA8 /* GDUnixSocketConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketConnection.m; sourceTree = "<group>"; };
+		9A0131011C6BC81500795EA8 /* GDUnixSocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketClient.h; sourceTree = "<group>"; };
+		9A0131021C6BC81500795EA8 /* GDUnixSocketClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketClient.m; sourceTree = "<group>"; };
+		9A0131041C6BCA6300795EA8 /* GDUnixSocketConnection_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketConnection_Private.h; sourceTree = "<group>"; };
+		9A0131051C6BCE4200795EA8 /* GDUnixSocketServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketServer.h; sourceTree = "<group>"; };
+		9A0131061C6BCE4200795EA8 /* GDUnixSocketServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketServer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +91,7 @@
 		9A0130D71C6BB97900795EA8 /* GDUnixSocketExample */ = {
 			isa = PBXGroup;
 			children = (
+				9A0130FD1C6BB9C000795EA8 /* GDUnixSocket */,
 				9A0130DB1C6BB97900795EA8 /* AppDelegate.h */,
 				9A0130DC1C6BB97900795EA8 /* AppDelegate.m */,
 				9A0130DE1C6BB97900795EA8 /* ViewController.h */,
@@ -109,6 +120,21 @@
 				9A0130F41C6BB97900795EA8 /* Info.plist */,
 			);
 			path = GDUnixSocketExampleTests;
+			sourceTree = "<group>";
+		};
+		9A0130FD1C6BB9C000795EA8 /* GDUnixSocket */ = {
+			isa = PBXGroup;
+			children = (
+				9A0130FE1C6BBA1300795EA8 /* GDUnixSocketConnection.h */,
+				9A0130FF1C6BBA1300795EA8 /* GDUnixSocketConnection.m */,
+				9A0131041C6BCA6300795EA8 /* GDUnixSocketConnection_Private.h */,
+				9A0131011C6BC81500795EA8 /* GDUnixSocketClient.h */,
+				9A0131021C6BC81500795EA8 /* GDUnixSocketClient.m */,
+				9A0131051C6BCE4200795EA8 /* GDUnixSocketServer.h */,
+				9A0131061C6BCE4200795EA8 /* GDUnixSocketServer.m */,
+			);
+			name = GDUnixSocket;
+			path = ../../GDUnixSocket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,9 +237,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A0131031C6BC81500795EA8 /* GDUnixSocketClient.m in Sources */,
 				9A0130E01C6BB97900795EA8 /* ViewController.m in Sources */,
+				9A0131071C6BCE4200795EA8 /* GDUnixSocketServer.m in Sources */,
 				9A0130DD1C6BB97900795EA8 /* AppDelegate.m in Sources */,
 				9A0130DA1C6BB97900795EA8 /* main.m in Sources */,
+				9A0131001C6BBA1300795EA8 /* GDUnixSocketConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +431,7 @@
 				9A0130F91C6BB97900795EA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9A0130FA1C6BB97900795EA8 /* Build configuration list for PBXNativeTarget "GDUnixSocketExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -410,6 +440,7 @@
 				9A0130FC1C6BB97900795EA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
