@@ -231,8 +231,8 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 
 #pragma mark - Life Cycle
 
-- (instancetype)initWithSocketPath:(NSString *)socketPath {
-    self = [super initWithSocketPath:socketPath];
+- (instancetype)initWithSocketPath:(NSString *)socketPath  andFragmentSize:(size_t)fragmentSize {
+    self = [super initWithSocketPath:socketPath andFragmentSize:fragmentSize];
     if (self) {
         _closeLock = [NSLock new];
         _connectedClients = [NSMutableDictionary new];

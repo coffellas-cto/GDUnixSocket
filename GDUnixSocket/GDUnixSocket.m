@@ -81,7 +81,6 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 
 @end
 
-
 @implementation GDUnixSocket
 
 @synthesize uniqueID = _uniqueID;
@@ -125,17 +124,21 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 #pragma mark - Private Methods
 
 - (NSData *)readFromSocket:(dispatch_fd_t)socket_fd error:(NSError **)error {
-    char buffer[256] = {};
-    ssize_t bytes_read = read(socket_fd, buffer, 256);
+    NSData *retVal = nil;
+    size_t buffer_size = self.fragmentSize;
+    char *buffer = calloc(buffer_size, sizeof(char));
+    ssize_t bytes_read = read(socket_fd, buffer, buffer_size);
     if (bytes_read == -1) {
         if (error) {
             *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketRead info:[self lastErrorInfoForSocket:socket_fd]];
         }
-        return nil;
+    } else {
+        NSLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
+        retVal = [NSData dataWithBytes:buffer length:bytes_read];
     }
     
-    NSLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
-    return [NSData dataWithBytes:buffer length:bytes_read];
+    free(buffer);
+    return retVal;
 }
 
 - (ssize_t)write:(NSData *)data toSocket:(dispatch_fd_t)socket_fd error:(NSError **)error {
@@ -208,6 +211,10 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 #pragma mark - Life Cycle
 
 - (instancetype)initWithSocketPath:(NSString *)socketPath {
+    return [self initWithSocketPath:socketPath andFragmentSize:256];
+}
+
+- (instancetype)initWithSocketPath:(NSString *)socketPath andFragmentSize:(size_t)fragmentSize {
     NSParameterAssert(socketPath);
     
     if (!socketPath.length) {
@@ -224,6 +231,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
     if (self) {
         _socketPath = [socketPath copy];
         _fd = kGDBadSocketFD;
+        _fragmentSize = fragmentSize;
     }
     
     return self;

@@ -41,11 +41,23 @@ extern NSString * const kGDUnixSocketErrDomain;
 @property (nonatomic, readonly, copy) NSString *uniqueID;
 
 /**
+ The maximum size of fragment read when `readWithError:` is called. Default is 256.
+ @see - (ssize_t)write:(NSData *)data error:(NSError **)error
+ */
+@property (atomic, readwrite, assign) size_t fragmentSize;
+
+/**
+ Calls `initWithSocketPath:andFragmentSize:` with default fragment size.
+ */
+- (instancetype)initWithSocketPath:(NSString *)socketPath;
+
+/**
  Initializes connection object with path to a socket.
  @param socketPath Path to Unix domain socket. Cannot be `nil`.
+ @param fragmentSize The maximum size of fragment read when `readWithError:` is called.
  @return An initialized connection object. Returns `nil` if `socketPath` is empty OR longer than 103 characters (Unix socket path length).
  */
-- (instancetype)initWithSocketPath:(NSString *)socketPath NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithSocketPath:(NSString *)socketPath andFragmentSize:(size_t)fragmentSize NS_DESIGNATED_INITIALIZER;
 
 /**
  Writes data to socket synchronously.
@@ -57,6 +69,8 @@ extern NSString * const kGDUnixSocketErrDomain;
 
 /**
  Reads data from socket synchronously.
+ @discussion Data is read by chunks of size assigned to `fragmentSize` property.
+ @see fragmentSize
  @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
  @return data object read from socket or `nil` if any error occurs.
  */
