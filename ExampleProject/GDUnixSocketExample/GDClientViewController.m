@@ -11,7 +11,18 @@
 #import "GDUnixSocketClient.h"
 #import <TargetConditionals.h>
 
+@interface GDClientViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UITableView *table;
+
+@end
+
 @implementation GDClientViewController
+
+#pragma mark - Stuff
+
+- (IBAction)messageToServerTapped:(id)sender {
+}
 
 - (void)showErrorWithTitle:(NSString *)title text:(NSString *)text {
     [[[UIAlertView alloc] initWithTitle:title message:text delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
@@ -67,6 +78,26 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(connectTapped)];
     [self updateState];
+}
+
+#pragma mark - UITableView Delegates Methods
+
+- (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *cellID = @"ID";
+    UITableViewCell *cell = [aTableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+    }
+    
+    return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.client.serverMessages.count;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return @"Messages from server";
 }
 
 @end

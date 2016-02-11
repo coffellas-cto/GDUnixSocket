@@ -15,6 +15,7 @@
 @property NSString *uinqueID;
 @property BOOL connected;
 @property GDUnixSocketClient *clientConnection;
+@property NSArray *serverMessages;
 @end
 
 @interface GDClientsViewController : UIViewController

@@ -217,8 +217,47 @@
                     <view key="view" contentMode="scaleToFill" id="aww-4E-LJ7">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="301"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="LGI-fT-tUM">
+                                <rect key="frame" x="0.0" y="44" width="600" height="213"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="exG-tg-CgG" id="iG0-fk-egY"/>
+                                    <outlet property="delegate" destination="exG-tg-CgG" id="OO5-ax-YAN"/>
+                                </connections>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" translatesAutoresizingMaskIntoConstraints="NO" id="cWn-Zg-sry">
+                                <rect key="frame" x="0.0" y="257" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem title="Message to server" id="bjy-rX-dkv">
+                                        <connections>
+                                            <action selector="messageToServerTapped:" destination="exG-tg-CgG" id="gcq-nE-pMq"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="LGI-fT-tUM" firstAttribute="leading" secondItem="aww-4E-LJ7" secondAttribute="leading" id="8SI-Kb-OVe"/>
+                            <constraint firstItem="cWn-Zg-sry" firstAttribute="top" secondItem="LGI-fT-tUM" secondAttribute="bottom" id="QRy-Vu-8sL"/>
+                            <constraint firstAttribute="trailing" secondItem="cWn-Zg-sry" secondAttribute="trailing" id="a8l-ZG-zTc"/>
+                            <constraint firstAttribute="trailing" secondItem="LGI-fT-tUM" secondAttribute="trailing" id="bRK-6h-e53"/>
+                            <constraint firstItem="LGI-fT-tUM" firstAttribute="top" secondItem="4aW-qm-F1p" secondAttribute="bottom" id="bib-YI-wan"/>
+                            <constraint firstItem="wRG-Ze-qm2" firstAttribute="top" secondItem="cWn-Zg-sry" secondAttribute="bottom" id="dIB-u9-m6n"/>
+                            <constraint firstItem="cWn-Zg-sry" firstAttribute="leading" secondItem="aww-4E-LJ7" secondAttribute="leading" id="gBn-2f-ZQG"/>
+                            <constraint firstItem="LGI-fT-tUM" firstAttribute="top" secondItem="aww-4E-LJ7" secondAttribute="top" id="zQT-Hf-dCe"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="zQT-Hf-dCe"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="table" destination="LGI-fT-tUM" id="LVA-3C-Fyb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pIj-wo-MJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
