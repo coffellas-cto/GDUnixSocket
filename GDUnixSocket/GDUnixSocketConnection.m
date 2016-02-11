@@ -47,6 +47,9 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
         case GDUnixSocketErrorSocketWrite:
             localizedDescription = @"Failed to write to socket";
             break;
+        case GDUnixSocketErrorSocketRead:
+            localizedDescription = @"Failed to read from socket";
+            break;
         case GDUnixSocketErrorClose:
             localizedDescription = @"Failed to close socket";
             break;
@@ -85,8 +88,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
 - (NSString *)uniqueID {
     @synchronized(self) {
         if (!_uniqueID) {
-            NSString *IDString = [NSUUID UUID].UUIDString;
-            _uniqueID = IDString;
+            _uniqueID = [[[NSString stringWithFormat:@"%d", [self fd]] dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
         }
     }
     
@@ -96,28 +98,11 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
 #pragma mark - Public Methods
 
 - (ssize_t)write:(NSData *)data error:(NSError **)error {
-    if (!data || !data.length) {
-        return 0;
-    }
-    
-    NSError *socketError = [self checkForBadSocket];
-    if (socketError) {
-        if (error) {
-            *error = socketError;
-        }
-        
-        return -1;
-    }
-    
-    const void *buffer = data.bytes;
-    size_t length = data.length;
-    
-    ssize_t written = write([self fd], buffer, length);
-    if (-1 == written && error) {
-        *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketWrite info:[self lastErrorInfo]];
-    }
-    
-    return written;
+    return [self write:data toSocket:[self fd] error:error];
+}
+
+- (NSData *)readWithError:(NSError **)error {
+    return [self readFromSocket:[self fd] error:error];
 }
 
 - (NSError *)close {
@@ -136,13 +121,61 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
 
 #pragma mark - Private Methods
 
+- (NSData *)readFromSocket:(dispatch_fd_t)socket_fd error:(NSError **)error {
+    char buffer[256] = {};
+    ssize_t bytes_read = read(socket_fd, buffer, 256);
+    if (bytes_read == -1) {
+        if (error) {
+            *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketRead info:[self lastErrorInfoForSocket:socket_fd]];
+        }
+        return nil;
+    }
+    
+    NSLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
+    return [NSData dataWithBytes:buffer length:bytes_read];
+}
+
+- (ssize_t)write:(NSData *)data toSocket:(dispatch_fd_t)socket_fd error:(NSError **)error {
+    if (!data || !data.length) {
+        return 0;
+    }
+    
+    NSError *socketError = [self checkForBadSocket:socket_fd];
+    if (socketError) {
+        if (error) {
+            *error = socketError;
+        }
+        
+        return -1;
+    }
+    
+    const void *buffer = data.bytes;
+    size_t length = data.length;
+    
+    ssize_t written = write(socket_fd, buffer, length);
+    if (-1 == written && error) {
+        *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketWrite info:[self lastErrorInfoForSocket:socket_fd]];
+    }
+    
+    NSLog(@"written %zd bytes on socket [%d]: %s", written, socket_fd, buffer);
+    return written;
+}
+
 - (NSString *)lastErrorInfo {
+    return [self lastErrorInfoForSocket:[self fd]];
+}
+
+- (NSString *)lastErrorInfoForSocket:(dispatch_fd_t)socket_fd {
     int last_error = errno;
-    return [NSString stringWithFormat:@"fd: %d. errno: %d. %s", [self fd], last_error, strerror(last_error)];
+    return [NSString stringWithFormat:@"fd: %d. errno: %d. %s", socket_fd, last_error, strerror(last_error)];
 }
 
 - (NSError *)checkForBadSocket {
-    if ([self fd] == kGDBadSocketFD) {
+    return [self checkForBadSocket:[self fd]];
+}
+
+- (NSError *)checkForBadSocket:(dispatch_fd_t)socket_fd {
+    if (socket_fd == kGDBadSocketFD) {
         [NSError gduds_errorForCode:GDUnixSocketErrorBadSocket];
     }
     
@@ -159,6 +192,14 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
     @synchronized(self) {
         _fd = fd;
     }
+}
+
+- (NSString *)debugDescription {
+    return self.uniqueID;
+}
+
+- (NSString *)description {
+    return self.uniqueID;
 }
 
 #pragma mark - Life Cycle

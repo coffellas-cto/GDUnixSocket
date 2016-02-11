@@ -79,12 +79,29 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
     if (!retVal) {
         retVal = [super close];
     }
+    if ([self.delegate respondsToSelector:@selector(unixSocketServerDidClose:error:)]) {
+        [self.delegate unixSocketServerDidClose:self error:retVal];
+    }
     [self.closeLock unlock];
     
     return retVal;
 }
 
 #pragma mark - Private Methods
+
+- (void)readOnConnection:(dispatch_fd_t)connection_fd {
+    NSError *error;
+    do {
+        NSData *data = [self readFromSocket:connection_fd error:&error];
+        if (!error) {
+            NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSLog(@"%s %@", __PRETTY_FUNCTION__, dataString);
+            if ([dataString rangeOfString:@"hello" options:NSCaseInsensitiveSearch].length) {
+                [self write:[@"Well, well, well..." dataUsingEncoding:NSUTF8StringEncoding] toSocket:connection_fd error:nil];
+            }
+        }
+    } while (!error);
+}
 
 - (void)mainLoop {
     while (true) {
@@ -112,6 +129,10 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         } else {
             GDUnixSocketConnection *newConnection = [[GDUnixSocketConnection alloc] initWithSocketPath:@"(dummy)"];
             [newConnection setFd:connection_fd];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self readOnConnection:connection_fd];
+            });
+            // TODO: Store connections and close them when needed.
             if ([self.delegate respondsToSelector:@selector(unixSocketServer:didAcceptConnection:)]) {
                 [self.delegate unixSocketServer:self didAcceptConnection:newConnection];
             } else {

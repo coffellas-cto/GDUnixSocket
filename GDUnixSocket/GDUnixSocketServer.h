@@ -41,6 +41,13 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  Protocol of `GDUnixSocketServer`'s delegate.
  */
 @protocol GDUnixSocketServerDelegate <NSObject>
+@optional
+/**
+ Called when delegate's owner closes its socket.
+ @param unixSocketServer Delegate's owner, a server listening on incoming connections.
+ @param error Error object describing the problem or `nil` if closed successfully.
+ */
+- (void)unixSocketServerDidClose:(GDUnixSocketServer *)unixSocketServer error:(NSError *)error;
 
 /**
  Called when delegate's owner accepts a new incoming connection.

@@ -21,5 +21,7 @@
 - (NSError *)checkForBadSocket;
 - (dispatch_fd_t)fd;
 - (void)setFd:(dispatch_fd_t)fd;
+- (NSData *)readFromSocket:(dispatch_fd_t)socket_fd error:(NSError **)error;
+- (ssize_t)write:(NSData *)data toSocket:(dispatch_fd_t)socket_fd error:(NSError **)error;
 
 @end

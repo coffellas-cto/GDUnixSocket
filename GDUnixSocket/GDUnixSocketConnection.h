@@ -18,6 +18,7 @@ typedef enum : NSUInteger {
     GDUnixSocketErrorUnlink,
     GDUnixSocketErrorConnect,
     GDUnixSocketErrorSocketWrite,
+    GDUnixSocketErrorSocketRead,
     GDUnixSocketErrorClose
 } GDUnixSocketError;
 
@@ -52,6 +53,13 @@ extern NSString * const kGDUnixSocketErrDomain;
  @return The number of bytes written. If an error occurs, -1 is returned and an error object pointed by `error` parameter is set.
  */
 - (ssize_t)write:(NSData *)data error:(NSError **)error;
+
+/**
+ Reads data from socket synchronously.
+ @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
+ @return data object read from socket or `nil` if any error occurs.
+ */
+- (NSData *)readWithError:(NSError **)error;
 
 /**
  Closes established connection.
