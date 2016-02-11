@@ -55,7 +55,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
     address.sun_family = AF_UNIX;
     strncpy(address.sun_path, socket_path, sizeof(address.sun_path) - 1);
     if (0 != strcmp(address.sun_path, socket_path)) {
-        [self close];
+        [self closeSilently];
         return failureDeferBlock([NSError gduds_errorForCode:GDUnixSocketErrorListen info:@"The socket path is inconsistent"]);
     }
     
@@ -64,18 +64,22 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
     [self unlinkSocket:socket_path];
     
     if (0 != bind(socket_fd, (struct sockaddr *)&address, sizeof(struct sockaddr_un))) {
-        [self close];
+        [self closeSilently];
         return failureDeferBlock([NSError gduds_errorForCode:GDUnixSocketErrorBind info:[self lastErrorInfo]]);
     }
     
     if (0 != listen(socket_fd, maxConnections ?: kGDUnixSocketServerMaxConnectionsDefault)) {
-        [self close];
+        [self closeSilently];
         return failureDeferBlock([NSError gduds_errorForCode:GDUnixSocketErrorListen info:[self lastErrorInfo]]);
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self mainLoop];
     });
+    
+    if ([self.delegate respondsToSelector:@selector(unixSocketServerDidStartListening:)]) {
+        [self.delegate unixSocketServerDidStartListening:self];
+    }
     
     return YES;
 }
@@ -108,6 +112,14 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 #pragma mark - Overrides
 
 - (BOOL)closeWithError:(NSError **)error {
+    return [self closeWithError:error informDelegate:YES];
+}
+
+- (BOOL)closeSilently {
+    return [self closeWithError:nil informDelegate:NO];
+}
+
+- (BOOL)closeWithError:(NSError **)error informDelegate:(BOOL)informDelegate {
     BOOL retVal = NO;
     // First, close all active clients.
     [self removeAllClients];
@@ -119,7 +131,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         retVal = [super closeWithError:&retError];
     }
     
-    if ([self.delegate respondsToSelector:@selector(unixSocketServerDidClose:error:)]) {
+    if (informDelegate && [self.delegate respondsToSelector:@selector(unixSocketServerDidClose:error:)]) {
         [self.delegate unixSocketServerDidClose:self error:retError];
     }
     
@@ -142,10 +154,16 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         }
         
         NSData *data = [clientConnection readWithError:&error];
-        if (error || !data) {
+        if (!data) {
             if ([self clientExists:clientConnection]) {
-                if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForClientID:error:)]) {
-                    [self.delegate unixSocketServer:self didFailToReadForClientID:clientConnection.uniqueID error:error];
+                if (error) {
+                    if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForClientID:error:)]) {
+                        [self.delegate unixSocketServer:self didFailToReadForClientID:clientConnection.uniqueID error:error];
+                    }
+                } else {
+                    if ([self.delegate respondsToSelector:@selector(unixSocketServer:clientWithIDDidDisconnect:)]) {
+                        [self.delegate unixSocketServer:self clientWithIDDidDisconnect:clientConnection.uniqueID];
+                    }
                 }
                 
                 [self removeAndCloseClient:clientConnection];

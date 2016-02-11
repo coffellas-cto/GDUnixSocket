@@ -9,6 +9,7 @@
 #import "GDClientViewController.h"
 #import "GDClientsViewController.h"
 #import "GDUnixSocketClient.h"
+#import <TargetConditionals.h>
 
 @implementation GDClientViewController
 
@@ -36,7 +37,12 @@
         }
     } else {
         if (!connection) {
-            connection = [[GDUnixSocketClient alloc] initWithSocketPath:@"/tmp/test_socket"];
+#if TARGET_OS_SIMULATOR
+            NSString *socketPath = @"/tmp/test_socket";
+#else
+            NSString *socketPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"test_socket"];
+#endif /* TARGET_OS_SIMULATOR */
+            connection = [[GDUnixSocketClient alloc] initWithSocketPath:socketPath];
         }
         
         NSError *error;

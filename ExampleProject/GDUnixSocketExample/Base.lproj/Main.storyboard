@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -80,25 +81,48 @@
                     <view key="view" contentMode="scaleToFill" id="U4b-sI-oIT">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tbJ-zn-lZA">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert"/>
+                            </textView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Oqw-og-EIC" firstAttribute="top" secondItem="tbJ-zn-lZA" secondAttribute="bottom" id="05a-du-S6W"/>
+                            <constraint firstItem="tbJ-zn-lZA" firstAttribute="top" secondItem="U4b-sI-oIT" secondAttribute="top" id="429-HW-eqQ"/>
+                            <constraint firstItem="tbJ-zn-lZA" firstAttribute="leading" secondItem="U4b-sI-oIT" secondAttribute="leading" id="YjJ-fe-Fnp"/>
+                            <constraint firstAttribute="trailing" secondItem="tbJ-zn-lZA" secondAttribute="trailing" id="gYI-Vb-aIZ"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Server" id="rfb-tY-qPZ">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="VbZ-dE-Lfh">
+                        <barButtonItem key="leftBarButtonItem" style="done" id="VbZ-dE-Lfh">
                             <view key="customView" contentMode="scaleToFill" id="4E6-hX-wkw">
                                 <rect key="frame" x="20" y="12" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Start" id="oFw-W6-Kzy">
-                            <connections>
-                                <action selector="toggleServerState:" destination="0bO-Yn-b1s" id="5Ok-GX-BNj"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Start" id="oFw-W6-Kzy">
+                                <connections>
+                                    <action selector="toggleServerState:" destination="0bO-Yn-b1s" id="5Ok-GX-BNj"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="trash" id="5iq-lh-lMG">
+                                <connections>
+                                    <action selector="trashTapped:" destination="0bO-Yn-b1s" id="UwX-Ci-xOP"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="logView" destination="tbJ-zn-lZA" id="hkg-kM-yiR"/>
                         <outlet property="serverOnlineIndicator" destination="4E6-hX-wkw" id="tqR-Q6-D2l"/>
                         <outlet property="toggleServerStateButton" destination="oFw-W6-Kzy" id="k9X-cG-On5"/>
+                        <outlet property="trashButton" destination="5iq-lh-lMG" id="MXh-Ny-vDb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9GM-2H-Att" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -119,7 +143,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="EIt-m8-ceJ">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="301"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="clientsCell" textLabel="XPI-uU-WlL" detailTextLabel="FHd-Jd-7wM" style="IBUITableViewCellStyleValue1" id="idj-5u-6Dz">
                                         <rect key="frame" x="0.0" y="94" width="600" height="44"/>
@@ -132,7 +156,7 @@
                                                     <rect key="frame" x="15" y="12" width="32" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FHd-Jd-7wM">

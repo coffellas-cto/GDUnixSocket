@@ -63,6 +63,12 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
 @protocol GDUnixSocketServerDelegate <NSObject>
 @optional
 /**
+ Called when delegate's owner starts listening on its socket.
+ @param unixSocketServer Delegate's owner, a server listening on incoming connections.
+ */
+- (void)unixSocketServerDidStartListening:(GDUnixSocketServer *)unixSocketServer;
+
+/**
  Called when delegate's owner closes its socket.
  @param unixSocketServer Delegate's owner, a server listening on incoming connections.
  @param error Error object describing the problem or `nil` if closed successfully.
@@ -75,6 +81,13 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  @param newClientID A new client connection unique identifier.
  */
 - (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptClientWithID:(NSString *)newClientID;
+
+/**
+ Called when one of the clients connections closes.
+ @param unixSocketServer Delegate's owner, a server listening on incoming connections.
+ @param clientID A client connection unique identifier.
+ */
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer clientWithIDDidDisconnect:(NSString *)clientID;
 
 /**
  Called when delegate's owner receives data from a particular client.
