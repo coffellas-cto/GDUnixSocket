@@ -27,7 +27,7 @@
 
 #pragma mark - GDUnixSocketServerDelegate
 
-- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnection:(GDUnixSocketConnection *)incomingConnection {
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnection:(GDUnixSocket *)incomingConnection {
     NSLog(@"Connection %@ accepted", incomingConnection);
 }
 

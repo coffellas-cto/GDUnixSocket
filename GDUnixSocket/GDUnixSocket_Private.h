@@ -1,21 +1,21 @@
 //
-//  GDUnixSocketConnection_Private.h
+//  GDUnixSocket_Private.h
 //  GDUnixSocketExample
 //
 //  Created by Alex G on 10.02.16.
 //  Copyright © 2016 Alexey Gordiyenko. All rights reserved.
 //
 
-#import "GDUnixSocketConnection.h"
+#import "GDUnixSocket.h"
 
-@interface NSError (GDUnixSocketConnection)
+@interface NSError (GDUnixSocket)
 
 + (NSError *)gduds_errorForCode:(GDUnixSocketError)code;
 + (NSError *)gduds_errorForCode:(GDUnixSocketError)code info:(NSString *)infoString;
 
 @end
 
-@interface GDUnixSocketConnection ()
+@interface GDUnixSocket ()
 
 - (NSString *)lastErrorInfo;
 - (NSError *)checkForBadSocket;

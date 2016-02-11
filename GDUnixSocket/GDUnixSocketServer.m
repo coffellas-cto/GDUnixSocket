@@ -7,7 +7,7 @@
 //
 
 #import "GDUnixSocketServer.h"
-#import "GDUnixSocketConnection_Private.h"
+#import "GDUnixSocket_Private.h"
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -127,7 +127,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
             [self.closeLock unlock];
             break;
         } else {
-            GDUnixSocketConnection *newConnection = [[GDUnixSocketConnection alloc] initWithSocketPath:@"(dummy)"];
+            GDUnixSocket *newConnection = [[GDUnixSocket alloc] initWithSocketPath:@"(dummy)"];
             [newConnection setFd:connection_fd];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 [self readOnConnection:connection_fd];

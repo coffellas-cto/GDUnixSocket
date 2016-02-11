@@ -6,12 +6,12 @@
 //  Copyright © 2016 Alexey Gordiyenko. All rights reserved.
 //
 
-#import "GDUnixSocketConnection.h"
+#import "GDUnixSocket.h"
 
 /**
  Class which represents client-side Unix domain socket connection.
  */
-@interface GDUnixSocketClient : GDUnixSocketConnection
+@interface GDUnixSocketClient : GDUnixSocket
 
 /**
  Connects to the socket.

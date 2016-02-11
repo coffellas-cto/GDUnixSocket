@@ -1,5 +1,5 @@
 //
-//  GDUnixSocketConnection.h
+//  GDUnixSocket.h
 //  GDUnixSocketExample
 //
 //  Created by Alex G on 10.02.16.
@@ -25,13 +25,13 @@ typedef enum : NSUInteger {
 /** Bad socket file descriptor (-1). */
 extern const int kGDBadSocketFD;
 
-/** Domain string for errors of `GDUnixSocketConnection` class. */
+/** Domain string for errors of `GDUnixSocket` class. */
 extern NSString * const kGDUnixSocketErrDomain;
 
 /**
  Base Unix domain socket connection class.
  */
-@interface GDUnixSocketConnection : NSObject
+@interface GDUnixSocket : NSObject
 
 /** A path to socket. */
 @property (nonatomic, readonly, copy) NSString *socketPath;

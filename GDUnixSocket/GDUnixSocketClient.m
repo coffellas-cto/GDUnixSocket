@@ -7,7 +7,7 @@
 //
 
 #import "GDUnixSocketClient.h"
-#import "GDUnixSocketConnection_Private.h"
+#import "GDUnixSocket_Private.h"
 
 #include <stdio.h>
 #include <sys/socket.h>

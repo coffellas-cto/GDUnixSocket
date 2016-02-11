@@ -1,23 +1,23 @@
 //
-//  GDUnixSocketConnection.m
+//  GDUnixSocket.m
 //  GDUnixSocketExample
 //
 //  Created by Alex G on 10.02.16.
 //  Copyright © 2016 Alexey Gordiyenko. All rights reserved.
 //
 
-#import "GDUnixSocketConnection.h"
+#import "GDUnixSocket.h"
 
 #import <sys/un.h>
 
 #pragma mark - Constants
 
 const int kGDBadSocketFD = -1;
-NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection";
+NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 
 #pragma mark - NSError
 
-@implementation NSError (GDUnixSocketConnection)
+@implementation NSError (GDUnixSocket)
 
 + (NSError *)gduds_errorForCode:(GDUnixSocketError)code {
     return [self gduds_errorForCode:code info:nil];
@@ -70,16 +70,16 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
 
 @end
 
-#pragma mark - GDUnixSocketConnection
+#pragma mark - GDUnixSocket
 
-@interface GDUnixSocketConnection () {
+@interface GDUnixSocket () {
     dispatch_fd_t _fd;
 }
 
 @end
 
 
-@implementation GDUnixSocketConnection
+@implementation GDUnixSocket
 
 @synthesize uniqueID = _uniqueID;
 

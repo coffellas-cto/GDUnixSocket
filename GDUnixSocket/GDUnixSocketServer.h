@@ -6,7 +6,7 @@
 //  Copyright © 2016 Alexey Gordiyenko. All rights reserved.
 //
 
-#import "GDUnixSocketConnection.h"
+#import "GDUnixSocket.h"
 
 /** Default number of simultaneous connections (5). */
 extern const int kGDUnixSocketServerMaxConnectionsDefault;
@@ -16,7 +16,7 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
 /**
  Class which represents server-side Unix domain socket connection.
  */
-@interface GDUnixSocketServer : GDUnixSocketConnection
+@interface GDUnixSocketServer : GDUnixSocket
 
 /** Delegate object that receives messages from `GDUnixSocketServer` object. */
 @property (nonatomic, readwrite, weak) id<GDUnixSocketServerDelegate> delegate;
@@ -54,7 +54,7 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  @param unixSocketServer Delegate's owner, a server listening on incoming connections.
  @param incomingConnection A new connection object.
  */
-- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnection:(GDUnixSocketConnection *)incomingConnection;
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnection:(GDUnixSocket *)incomingConnection;
 
 /**
  Called when delegate's owner failed to accept connection.
