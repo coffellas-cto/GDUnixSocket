@@ -25,15 +25,18 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  Listens for incoming connections on the socket.
  @discussion First the address is retrieved from socket path (previously passed as an argument to designated initializer). Then it binds the socket: assigns that address. Finally it starts listening on the socket, that is, marks it as a socket that will be used to accept incoming connection requests. The socket is closed if any error occurs.
  @param maxConnections The maximum simultaneous connections count. If 0 is passed `kGDUnixSocketServerMaxConnectionsDefault` value is used (which is 5). If a connection request arrives when the queue is full, the client may receive an error with an indication of ECONNREFUSED or, if the underlying protocol supports retransmission, the request may be ignored so that a later reattempt at connection succeeds.
- @return An error object if any error occured or `nil` otherwise.
+ @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
+ @return YES on success, NO otherwise.
  */
-- (NSError *)listenWithMaxConnections:(int)maxConnections;
+- (BOOL)listenWithMaxConnections:(int)maxConnections error:(NSError **)error;
 
 /**
- Sends `listenWithMaxConnections:` message with 0 as an argument.
- @see - (NSError *)listenWithMaxConnections:(NSInteger)maxConnections;
+ Sends `listenWithMaxConnections:error:` message with 0 as an argument.
+ @see - (BOOL)listenWithMaxConnections:(int)maxConnections error:(NSError **)error;
+ @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
+ @return YES on success, NO otherwise.
  */
-- (NSError *)listen;
+- (BOOL)listenWithError:(NSError **)error;
 
 /**
  Writes data to socket associated with client synchronously.

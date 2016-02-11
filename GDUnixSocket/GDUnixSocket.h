@@ -93,8 +93,15 @@ extern NSString * const kGDUnixSocketErrDomain;
 
 /**
  Closes established connection.
- @return Error object on error, otherwise `nil`.
+ @return YES on success, NO otherwise.
  */
-- (NSError *)close;
+- (BOOL)close;
+
+/**
+ Closes established connection.
+ @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
+ @return YES on success, NO otherwise.
+ */
+- (BOOL)closeWithError:(NSError **)error;
 
 @end

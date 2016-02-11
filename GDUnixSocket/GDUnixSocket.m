@@ -127,18 +127,27 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
     });
 }
 
-- (NSError *)close {
-    NSError *socketError = [self checkForBadSocket];
-    if (socketError) {
-        return socketError;
+- (BOOL)close {
+    return [self closeWithError:nil];
+}
+
+- (BOOL)closeWithError:(NSError **)error {
+    BOOL retVal = NO;
+    NSError *retError = [self checkForBadSocket];
+    if (!retError) {
+        retVal = close([self fd]) != -1;
+        if (!retVal) {
+            retError = [NSError gduds_errorForCode:GDUnixSocketErrorClose info:[self lastErrorInfo]];
+        }
+        
+        [self setFd:kGDBadSocketFD];
     }
     
-    if (-1 == close([self fd])) {
-        return [NSError gduds_errorForCode:GDUnixSocketErrorClose info:[self lastErrorInfo]];
+    if (retError && error) {
+        *error = retError;
     }
     
-    [self setFd:kGDBadSocketFD];
-    return nil;
+    return retVal;
 }
 
 #pragma mark - Private Methods

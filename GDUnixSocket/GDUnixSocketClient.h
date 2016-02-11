@@ -16,8 +16,9 @@
 /**
  Connects to the socket.
  @discussion First the address is retrieved from socket path (previously passed as an argument to designated initializer). Then it attempts to make a connection to the socket that is bound to that address. The socket is closed if any error occurs.
- @return An error object if any error occured or `nil` otherwise.
+ @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
+ @return YES on success or NO otherwise.
  */
-- (NSError *)connect;
+- (BOOL)connectWithError:(NSError **)error;
 
 @end
