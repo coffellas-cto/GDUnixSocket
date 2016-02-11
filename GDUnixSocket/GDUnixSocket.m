@@ -88,7 +88,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 - (NSString *)uniqueID {
     @synchronized(self) {
         if (!_uniqueID) {
-            _uniqueID = [[[NSString stringWithFormat:@"%d", [self fd]] dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+            _uniqueID = [NSUUID UUID].UUIDString;
         }
     }
     

@@ -62,11 +62,12 @@
                     NSData *streamData = nil;
                     do {
                         streamData = [client readWithError:nil];
-                        if (streamData) {
+                        if (streamData.length) {
                             NSString *dataString = [[NSString alloc] initWithData:streamData encoding:NSUTF8StringEncoding];
                             NSLog(@"Connection %@ received: %@", client, dataString);
                         }
-                    } while (streamData);
+                    } while (streamData.length);
+                    [client close];
                 });
             });
         }

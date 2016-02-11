@@ -22,6 +22,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 @interface GDUnixSocketServer ()
 
 @property (nonatomic, readonly, strong) NSLock *closeLock;
+@property (nonatomic, readonly, strong) NSMutableDictionary *connectedClients;
 
 @end
 
@@ -74,14 +75,20 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 #pragma mark - Overrides
 
 - (NSError *)close {
+    // First, close all active clients.
+    [self removeAllClients];
+    
+    // Then close the listening socket.
     [self.closeLock lock];
     NSError *retVal = [self unlinkSocket];
     if (!retVal) {
         retVal = [super close];
     }
+    
     if ([self.delegate respondsToSelector:@selector(unixSocketServerDidClose:error:)]) {
         [self.delegate unixSocketServerDidClose:self error:retVal];
     }
+    
     [self.closeLock unlock];
     
     return retVal;
@@ -89,15 +96,25 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 
 #pragma mark - Private Methods
 
-- (void)readOnConnection:(dispatch_fd_t)connection_fd {
+- (void)readOnConnection:(GDUnixSocket *)clientConnection {
     NSError *error;
     do {
-        NSData *data = [self readFromSocket:connection_fd error:&error];
-        if (!error) {
+        if (![self clientExists:clientConnection]) {
+            break;
+        }
+        
+        NSData *data = [clientConnection readWithError:&error];
+        if (error) {
+            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForConnectionID:error:)]) {
+                [self.delegate unixSocketServer:self didFailToReadForConnectionID:clientConnection.uniqueID error:error];
+            }
+            
+            [self removeAndCloseClient:clientConnection];
+        } else {
             NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSLog(@"%s %@", __PRETTY_FUNCTION__, dataString);
             if ([dataString rangeOfString:@"hello" options:NSCaseInsensitiveSearch].length) {
-                [self write:[@"Well, well, well..." dataUsingEncoding:NSUTF8StringEncoding] toSocket:connection_fd error:nil];
+                [self write:[@"Well, well, well..." dataUsingEncoding:NSUTF8StringEncoding] toSocket:[clientConnection fd] error:nil];
             }
         }
     } while (!error);
@@ -116,27 +133,29 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         if (connection_fd == kGDBadSocketFD) {
             [self.closeLock lock];
             if ([self fd] != kGDBadSocketFD) {
+                // If accept failed, that means some error happened. Close listening socket.
                 if ([self.delegate respondsToSelector:@selector(unixSocketServerDidFailToAcceptConnection:error:)]) {
                     NSError *error = [NSError gduds_errorForCode:GDUnixSocketErrorAccept info:[self lastErrorInfo]];
                     [self.delegate unixSocketServerDidFailToAcceptConnection:self error:error];
                 }
                 
+                [self.closeLock unlock];
                 [self close];
+            } else {
+                [self.closeLock unlock];
             }
-            
-            [self.closeLock unlock];
             break;
         } else {
             GDUnixSocket *newConnection = [[GDUnixSocket alloc] initWithSocketPath:@"(dummy)"];
             [newConnection setFd:connection_fd];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [self readOnConnection:connection_fd];
+                [self readOnConnection:newConnection];
             });
-            // TODO: Store connections and close them when needed.
-            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didAcceptConnection:)]) {
-                [self.delegate unixSocketServer:self didAcceptConnection:newConnection];
-            } else {
-                [newConnection close];
+            
+            [self addClient:newConnection];
+            
+            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didAcceptConnectionWithID:)]) {
+                [self.delegate unixSocketServer:self didAcceptConnectionWithID:newConnection.uniqueID];
             }
         }
     }
@@ -162,13 +181,48 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
     return nil;
 }
 
+#pragma mark - Clients Related
+
+- (void)addClient:(GDUnixSocket *)client {
+    @synchronized(self) {
+        self.connectedClients[@([client fd])] = client;
+    }
+}
+
+- (BOOL)clientExists:(GDUnixSocket *)client {
+    @synchronized(self) {
+        return self.connectedClients[@([client fd])];
+    }
+}
+
+- (NSError *)removeAndCloseClient:(GDUnixSocket *)client {
+    if ([self clientExists:client]) {
+        @synchronized(self) {
+            [self.connectedClients removeObjectForKey:@([client fd])];
+            return [client close];
+        }
+    }
+    
+    return nil;
+}
+
+- (void)removeAllClients {
+    @synchronized(self) {
+        for (GDUnixSocket *client in self.connectedClients.allValues) {
+            [client close];
+        }
+        
+        [self.connectedClients removeAllObjects];
+    }
+}
+
 #pragma mark - Life Cycle
 
-- (instancetype)initWithSocketPath:(NSString *)socketPath
-{
+- (instancetype)initWithSocketPath:(NSString *)socketPath {
     self = [super initWithSocketPath:socketPath];
     if (self) {
         _closeLock = [NSLock new];
+        _connectedClients = [NSMutableDictionary new];
     }
     return self;
 }

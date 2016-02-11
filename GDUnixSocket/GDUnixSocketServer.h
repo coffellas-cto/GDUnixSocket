@@ -52,9 +52,11 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
 /**
  Called when delegate's owner accepts a new incoming connection.
  @param unixSocketServer Delegate's owner, a server listening on incoming connections.
- @param incomingConnection A new connection object.
+ @param newConnectionID A new connection unique identifier.
  */
-- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnection:(GDUnixSocket *)incomingConnection;
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnectionWithID:(NSString *)newConnectionID;
+
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didFailToReadForConnectionID:(NSString *)newConnectionID error:(NSError *)error;
 
 /**
  Called when delegate's owner failed to accept connection.
