@@ -53,6 +53,9 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
         case GDUnixSocketErrorClose:
             localizedDescription = @"Failed to close socket";
             break;
+        case GDUnixSocketErrorUnknownClient:
+            localizedDescription = @"Unknown client. It is either disconnected or never existed";
+            break;
             
         default:
             localizedDescription = @"Unknown Error";

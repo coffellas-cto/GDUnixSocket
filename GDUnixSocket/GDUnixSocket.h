@@ -19,7 +19,8 @@ typedef enum : NSUInteger {
     GDUnixSocketErrorConnect,
     GDUnixSocketErrorSocketWrite,
     GDUnixSocketErrorSocketRead,
-    GDUnixSocketErrorClose
+    GDUnixSocketErrorClose,
+    GDUnixSocketErrorUnknownClient
 } GDUnixSocketError;
 
 /** Bad socket file descriptor (-1). */

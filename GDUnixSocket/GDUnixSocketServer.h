@@ -35,6 +35,8 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  */
 - (NSError *)listen;
 
+- (ssize_t)sendData:(NSData *)data toClientWithID:(NSString *)clientID error:(NSError **)error;
+
 @end
 
 /**
@@ -52,11 +54,13 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
 /**
  Called when delegate's owner accepts a new incoming connection.
  @param unixSocketServer Delegate's owner, a server listening on incoming connections.
- @param newConnectionID A new connection unique identifier.
+ @param newClientID A new client connection unique identifier.
  */
-- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnectionWithID:(NSString *)newConnectionID;
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptClientWithID:(NSString *)newClientID;
 
-- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didFailToReadForConnectionID:(NSString *)newConnectionID error:(NSError *)error;
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didReceiveData:(NSData *)data fromClientWithID:(NSString *)clientID;
+
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didFailToReadForClientID:(NSString *)cclientID error:(NSError *)error;
 
 /**
  Called when delegate's owner failed to accept connection.

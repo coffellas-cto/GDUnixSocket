@@ -27,8 +27,8 @@
 
 #pragma mark - GDUnixSocketServerDelegate
 
-- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptConnection:(GDUnixSocket *)incomingConnection {
-    NSLog(@"Connection %@ accepted", incomingConnection);
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptClientWithID:(NSString *)newClientID {
+    NSLog(@"Connection %@ accepted", newClientID);
 }
 
 - (void)unixSocketServerDidFailToAcceptConnection:(GDUnixSocketServer *)unixSocketServer error:(NSError *)error {
@@ -37,6 +37,18 @@
 
 - (void)unixSocketServerDidClose:(GDUnixSocketServer *)unixSocketServer error:(NSError *)error {
     NSLog(@"%s %@", __PRETTY_FUNCTION__, error);
+}
+
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didFailToReadForClientID:(NSString *)clientID error:(NSError *)error {
+    NSLog(@"%s %@ %@", __PRETTY_FUNCTION__, clientID, error);
+}
+
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didReceiveData:(NSData *)data fromClientWithID:(NSString *)clientID {
+    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"%s %@ %@", __PRETTY_FUNCTION__, clientID, dataString);
+    if ([dataString rangeOfString:@"hello" options:NSCaseInsensitiveSearch].length) {
+        [unixSocketServer sendData:[@"Well, well, well..." dataUsingEncoding:NSUTF8StringEncoding] toClientWithID:clientID error:nil];
+    }
 }
 
 #pragma mark - Life Cycle

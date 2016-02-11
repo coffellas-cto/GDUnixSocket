@@ -72,6 +72,21 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
     return nil;
 }
 
+- (ssize_t)sendData:(NSData *)data toClientWithID:(NSString *)clientID error:(NSError **)error {
+    @synchronized(self) {
+        GDUnixSocket *client = self.connectedClients[clientID];
+        if (!client) {
+            if (error) {
+                *error = [NSError gduds_errorForCode:GDUnixSocketErrorUnknownClient info:[NSString stringWithFormat:@"Client ID: %@", clientID]];
+            }
+            
+            return -1;
+        }
+        
+        return [client write:data error:error];
+    }
+}
+
 #pragma mark - Overrides
 
 - (NSError *)close {
@@ -105,16 +120,14 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         
         NSData *data = [clientConnection readWithError:&error];
         if (error) {
-            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForConnectionID:error:)]) {
-                [self.delegate unixSocketServer:self didFailToReadForConnectionID:clientConnection.uniqueID error:error];
+            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForClientID:error:)]) {
+                [self.delegate unixSocketServer:self didFailToReadForClientID:clientConnection.uniqueID error:error];
             }
             
             [self removeAndCloseClient:clientConnection];
         } else {
-            NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"%s %@", __PRETTY_FUNCTION__, dataString);
-            if ([dataString rangeOfString:@"hello" options:NSCaseInsensitiveSearch].length) {
-                [self write:[@"Well, well, well..." dataUsingEncoding:NSUTF8StringEncoding] toSocket:[clientConnection fd] error:nil];
+            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didReceiveData:fromClientWithID:)]) {
+                [self.delegate unixSocketServer:self didReceiveData:data fromClientWithID:clientConnection.uniqueID];
             }
         }
     } while (!error);
@@ -154,8 +167,8 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
             
             [self addClient:newConnection];
             
-            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didAcceptConnectionWithID:)]) {
-                [self.delegate unixSocketServer:self didAcceptConnectionWithID:newConnection.uniqueID];
+            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didAcceptClientWithID:)]) {
+                [self.delegate unixSocketServer:self didAcceptClientWithID:newConnection.uniqueID];
             }
         }
     }
@@ -185,20 +198,20 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 
 - (void)addClient:(GDUnixSocket *)client {
     @synchronized(self) {
-        self.connectedClients[@([client fd])] = client;
+        self.connectedClients[client.uniqueID] = client;
     }
 }
 
 - (BOOL)clientExists:(GDUnixSocket *)client {
     @synchronized(self) {
-        return self.connectedClients[@([client fd])];
+        return self.connectedClients[client.uniqueID];
     }
 }
 
 - (NSError *)removeAndCloseClient:(GDUnixSocket *)client {
     if ([self clientExists:client]) {
         @synchronized(self) {
-            [self.connectedClients removeObjectForKey:@([client fd])];
+            [self.connectedClients removeObjectForKey:client.uniqueID];
             return [client close];
         }
     }
