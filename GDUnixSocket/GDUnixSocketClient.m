@@ -44,6 +44,10 @@
         }
     }
     
+    if (retError && error) {
+        *error = retError;
+    }
+    
     return retVal;
 }
 

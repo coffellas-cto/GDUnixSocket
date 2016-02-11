@@ -163,7 +163,9 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
         }
     } else {
         NSLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
-        retVal = [NSData dataWithBytes:buffer length:bytes_read];
+        if (bytes_read) {
+            retVal = [NSData dataWithBytes:buffer length:bytes_read];
+        }
     }
     
     free(buffer);

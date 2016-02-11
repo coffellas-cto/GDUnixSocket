@@ -77,7 +77,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         [self mainLoop];
     });
     
-    return nil;
+    return YES;
 }
 
 - (ssize_t)sendData:(NSData *)data toClientWithID:(NSString *)clientID error:(NSError **)error {
@@ -142,7 +142,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         }
         
         NSData *data = [clientConnection readWithError:&error];
-        if (error) {
+        if (error || !data) {
             if ([self clientExists:clientConnection]) {
                 if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForClientID:error:)]) {
                     [self.delegate unixSocketServer:self didFailToReadForClientID:clientConnection.uniqueID error:error];

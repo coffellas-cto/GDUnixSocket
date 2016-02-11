@@ -17,6 +17,9 @@
 		9A0131001C6BBA1300795EA8 /* GDUnixSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0130FF1C6BBA1300795EA8 /* GDUnixSocket.m */; };
 		9A0131031C6BC81500795EA8 /* GDUnixSocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0131021C6BC81500795EA8 /* GDUnixSocketClient.m */; };
 		9A0131071C6BCE4200795EA8 /* GDUnixSocketServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0131061C6BCE4200795EA8 /* GDUnixSocketServer.m */; };
+		9A01310A1C6CE5BA00795EA8 /* GDServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0131091C6CE5BA00795EA8 /* GDServerViewController.m */; };
+		9A01310D1C6CE5DB00795EA8 /* GDClientsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A01310C1C6CE5DB00795EA8 /* GDClientsViewController.m */; };
+		9A0131101C6CF18900795EA8 /* GDClientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A01310F1C6CF18900795EA8 /* GDClientViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,12 @@
 		9A0131041C6BCA6300795EA8 /* GDUnixSocket_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocket_Private.h; sourceTree = "<group>"; };
 		9A0131051C6BCE4200795EA8 /* GDUnixSocketServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GDUnixSocketServer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		9A0131061C6BCE4200795EA8 /* GDUnixSocketServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GDUnixSocketServer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		9A0131081C6CE5BA00795EA8 /* GDServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDServerViewController.h; sourceTree = "<group>"; };
+		9A0131091C6CE5BA00795EA8 /* GDServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDServerViewController.m; sourceTree = "<group>"; };
+		9A01310B1C6CE5DB00795EA8 /* GDClientsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDClientsViewController.h; sourceTree = "<group>"; };
+		9A01310C1C6CE5DB00795EA8 /* GDClientsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDClientsViewController.m; sourceTree = "<group>"; };
+		9A01310E1C6CF18900795EA8 /* GDClientViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDClientViewController.h; sourceTree = "<group>"; };
+		9A01310F1C6CF18900795EA8 /* GDClientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDClientViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +105,12 @@
 				9A0130DC1C6BB97900795EA8 /* AppDelegate.m */,
 				9A0130DE1C6BB97900795EA8 /* ViewController.h */,
 				9A0130DF1C6BB97900795EA8 /* ViewController.m */,
+				9A0131081C6CE5BA00795EA8 /* GDServerViewController.h */,
+				9A0131091C6CE5BA00795EA8 /* GDServerViewController.m */,
+				9A01310B1C6CE5DB00795EA8 /* GDClientsViewController.h */,
+				9A01310C1C6CE5DB00795EA8 /* GDClientsViewController.m */,
+				9A01310E1C6CF18900795EA8 /* GDClientViewController.h */,
+				9A01310F1C6CF18900795EA8 /* GDClientViewController.m */,
 				9A0130E11C6BB97900795EA8 /* Main.storyboard */,
 				9A0130E41C6BB97900795EA8 /* Assets.xcassets */,
 				9A0130E61C6BB97900795EA8 /* LaunchScreen.storyboard */,
@@ -237,8 +252,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A01310D1C6CE5DB00795EA8 /* GDClientsViewController.m in Sources */,
 				9A0131031C6BC81500795EA8 /* GDUnixSocketClient.m in Sources */,
+				9A01310A1C6CE5BA00795EA8 /* GDServerViewController.m in Sources */,
 				9A0130E01C6BB97900795EA8 /* ViewController.m in Sources */,
+				9A0131101C6CF18900795EA8 /* GDClientViewController.m in Sources */,
 				9A0131071C6BCE4200795EA8 /* GDUnixSocketServer.m in Sources */,
 				9A0130DD1C6BB97900795EA8 /* AppDelegate.m in Sources */,
 				9A0130DA1C6BB97900795EA8 /* main.m in Sources */,
