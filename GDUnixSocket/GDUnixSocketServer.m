@@ -143,11 +143,13 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         
         NSData *data = [clientConnection readWithError:&error];
         if (error) {
-            if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForClientID:error:)]) {
-                [self.delegate unixSocketServer:self didFailToReadForClientID:clientConnection.uniqueID error:error];
+            if ([self clientExists:clientConnection]) {
+                if ([self.delegate respondsToSelector:@selector(unixSocketServer:didFailToReadForClientID:error:)]) {
+                    [self.delegate unixSocketServer:self didFailToReadForClientID:clientConnection.uniqueID error:error];
+                }
+                
+                [self removeAndCloseClient:clientConnection];
             }
-            
-            [self removeAndCloseClient:clientConnection];
         } else {
             if ([self.delegate respondsToSelector:@selector(unixSocketServer:didReceiveData:fromClientWithID:)]) {
                 [self.delegate unixSocketServer:self didReceiveData:data fromClientWithID:clientConnection.uniqueID];
