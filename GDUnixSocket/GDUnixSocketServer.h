@@ -35,6 +35,13 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  */
 - (NSError *)listen;
 
+/**
+ Writes data to socket associated with client synchronously.
+ @param data Data to be written. If you pass `nil` or empty data, this method does nothing.
+ @param clientID A client connection unique identifier.
+ @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
+ @return The number of bytes written. If an error occurs, -1 is returned and an error object pointed by `error` parameter is set.
+ */
 - (ssize_t)sendData:(NSData *)data toClientWithID:(NSString *)clientID error:(NSError **)error;
 
 @end
@@ -58,9 +65,21 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  */
 - (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptClientWithID:(NSString *)newClientID;
 
+/**
+ Called when delegate's owner receives data from a particular client.
+ @param unixSocketServer Delegate's owner, a server listening on incoming connections.
+ @param data Data object received from client.
+ @param clientID A client connection unique identifier.
+ */
 - (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didReceiveData:(NSData *)data fromClientWithID:(NSString *)clientID;
 
-- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didFailToReadForClientID:(NSString *)cclientID error:(NSError *)error;
+/**
+ Called when delegate's owner failed to data from socket associated with particular client.
+ @param unixSocketServer Delegate's owner, a server listening on incoming connections.
+ @param clientID A client connection unique identifier.
+ @param error Error object describing the problem.
+ */
+- (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didFailToReadForClientID:(NSString *)clientID error:(NSError *)error;
 
 /**
  Called when delegate's owner failed to accept connection.
