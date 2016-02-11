@@ -83,8 +83,18 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
             return -1;
         }
         
-        return [client write:data error:error];
+        return [client writeData:data error:error];
     }
+}
+
+- (void)sendData:(NSData *)data toClientWithID:(NSString *)clientID completion:(void(^)(NSError *error, ssize_t size))completion {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error = nil;
+        ssize_t size = [self sendData:data toClientWithID:clientID error:&error];
+        if (completion) {
+            completion(error, size);
+        }
+    });
 }
 
 #pragma mark - Overrides

@@ -69,7 +69,7 @@
         if (![client connect]) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSString *hello = @"Hello server";
-                [client write:[hello dataUsingEncoding:NSUTF8StringEncoding] error:nil];
+                [client writeData:[hello dataUsingEncoding:NSUTF8StringEncoding] error:nil];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     NSData *streamData = nil;
                     do {

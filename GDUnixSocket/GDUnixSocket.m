@@ -99,12 +99,32 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 
 #pragma mark - Public Methods
 
-- (ssize_t)write:(NSData *)data error:(NSError **)error {
+- (ssize_t)writeData:(NSData *)data error:(NSError **)error {
     return [self write:data toSocket:[self fd] error:error];
+}
+
+- (void)writeData:(NSData *)data completion:(void(^)(NSError *error, ssize_t size))completion {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error = nil;
+        ssize_t size = [self writeData:data error:&error];
+        if (completion) {
+            completion(error, size);
+        }
+    });
 }
 
 - (NSData *)readWithError:(NSError **)error {
     return [self readFromSocket:[self fd] error:error];
+}
+
+- (void)readWithCompletion:(void(^)(NSError *error, NSData *data))completion {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error = nil;
+        NSData *data = [self readWithError:&error];
+        if (completion) {
+            completion(error, data);
+        }
+    });
 }
 
 - (NSError *)close {

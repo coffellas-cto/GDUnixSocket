@@ -44,6 +44,14 @@ extern const int kGDUnixSocketServerMaxConnectionsDefault;
  */
 - (ssize_t)sendData:(NSData *)data toClientWithID:(NSString *)clientID error:(NSError **)error;
 
+/**
+ Writes data to socket associated with client asynchronously.
+ @param data Data to be written. If you pass `nil` or empty data, this method does nothing.
+ @param clientID A client connection unique identifier.
+ @param completion Block to be called upon completion of writing operation. This block has no return value and receives two parameters: `error` if any error occurs and `size` which represents the number of bytes written.
+ */
+- (void)sendData:(NSData *)data toClientWithID:(NSString *)clientID completion:(void(^)(NSError *error, ssize_t size))completion;
+
 @end
 
 /**

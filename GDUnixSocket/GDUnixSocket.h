@@ -65,16 +65,31 @@ extern NSString * const kGDUnixSocketErrDomain;
  @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
  @return The number of bytes written. If an error occurs, -1 is returned and an error object pointed by `error` parameter is set.
  */
-- (ssize_t)write:(NSData *)data error:(NSError **)error;
+- (ssize_t)writeData:(NSData *)data error:(NSError **)error;
+
+/**
+ Writes data to socket asynchronously.
+ @param data Data to be written. If you pass `nil` or empty data, this method does nothing.
+ @param completion Block to be called upon completion of writing operation. This block has no return value and receives two parameters: `error` if any error occurs and `size` which represents the number of bytes written.
+ */
+- (void)writeData:(NSData *)data completion:(void(^)(NSError *error, ssize_t size))completion;
 
 /**
  Reads data from socket synchronously.
  @discussion Data is read by chunks of size assigned to `fragmentSize` property.
  @see fragmentSize
  @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
- @return data object read from socket or `nil` if any error occurs.
+ @return data Data object read from socket or `nil` if any error occurs.
  */
 - (NSData *)readWithError:(NSError **)error;
+
+/**
+ Reads data from socket asynchronously.
+ @discussion Data is read by chunks of size assigned to `fragmentSize` property.
+ @see fragmentSize
+ @param completion Block to be called upon completion of reading operation. This block has no return value and receives two parameters: `error` if any error occurs and `data` - data object read from socket.
+ */
+- (void)readWithCompletion:(void(^)(NSError *error, NSData *data))completion;
 
 /**
  Closes established connection.
