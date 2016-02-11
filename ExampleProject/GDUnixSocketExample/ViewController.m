@@ -7,16 +7,26 @@
 //
 
 #import "ViewController.h"
+#import "GDUnixSocketServer.h"
 
-@interface ViewController ()
+@interface ViewController () {
+    GDUnixSocketServer *server;
+}
 
 @end
 
 @implementation ViewController
+- (IBAction)stop:(id)sender {
+    [server close];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    server = [[GDUnixSocketServer alloc] initWithSocketPath:@"/tmp/test_socket"];
+    if (server) {
+        [server listen];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

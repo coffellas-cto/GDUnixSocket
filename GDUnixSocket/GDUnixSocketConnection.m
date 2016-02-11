@@ -8,6 +8,8 @@
 
 #import "GDUnixSocketConnection.h"
 
+#import <sys/un.h>
+
 #pragma mark - Constants
 
 const int kGDBadSocketFD = -1;
@@ -27,11 +29,26 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
         case GDUnixSocketErrorBadSocket:
             localizedDescription = @"Bad socket";
             break;
+        case GDUnixSocketErrorBind:
+            localizedDescription = @"Failed to bind socket";
+            break;
+        case GDUnixSocketErrorListen:
+            localizedDescription = @"Failed to listen on socket";
+            break;
+        case GDUnixSocketErrorAccept:
+            localizedDescription = @"Failed to accept connection, closing socket";
+            break;
+        case GDUnixSocketErrorUnlink:
+            localizedDescription = @"Failed to unlink socket";
+            break;
         case GDUnixSocketErrorConnect:
             localizedDescription = @"Failed to connect to socket";
             break;
         case GDUnixSocketErrorSocketWrite:
-            localizedDescription = [NSString stringWithFormat:@"Failed to write to socket"];
+            localizedDescription = @"Failed to write to socket";
+            break;
+        case GDUnixSocketErrorClose:
+            localizedDescription = @"Failed to close socket";
             break;
             
         default:
@@ -43,13 +60,14 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
         localizedDescription = [NSString stringWithFormat:@"%@. %@", localizedDescription, infoString];
     }
     
+    NSLog(@"Error: %@", localizedDescription);
+    
     return [NSError errorWithDomain:kGDUnixSocketErrDomain code:code userInfo:@{NSLocalizedDescriptionKey: localizedDescription}];
 }
 
 @end
 
 #pragma mark - GDUnixSocketConnection
-
 
 @interface GDUnixSocketConnection () {
     dispatch_fd_t _fd;
@@ -59,6 +77,21 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
 
 
 @implementation GDUnixSocketConnection
+
+@synthesize uniqueID = _uniqueID;
+
+#pragma mark - Accessors
+
+- (NSString *)uniqueID {
+    @synchronized(self) {
+        if (!_uniqueID) {
+            NSString *IDString = [NSUUID UUID].UUIDString;
+            _uniqueID = IDString;
+        }
+    }
+    
+    return _uniqueID;
+}
 
 #pragma mark - Public Methods
 
@@ -79,7 +112,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
     const void *buffer = data.bytes;
     size_t length = data.length;
     
-    ssize_t written = write(_fd, buffer, length);
+    ssize_t written = write([self fd], buffer, length);
     if (-1 == written && error) {
         *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketWrite info:[self lastErrorInfo]];
     }
@@ -93,11 +126,11 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
         return socketError;
     }
     
-    int ret_val = close(_fd);
-    if (-1 == ret_val) {
-        return [NSError gduds_errorForCode:GDUnixSocketErrorSocketWrite info:[self lastErrorInfo]];
+    if (-1 == close([self fd])) {
+        return [NSError gduds_errorForCode:GDUnixSocketErrorClose info:[self lastErrorInfo]];
     }
     
+    [self setFd:kGDBadSocketFD];
     return nil;
 }
 
@@ -105,11 +138,11 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
 
 - (NSString *)lastErrorInfo {
     int last_error = errno;
-    return [NSString stringWithFormat:@"fd: %d. errno: %d. %s", _fd, last_error, strerror(last_error)];
+    return [NSString stringWithFormat:@"fd: %d. errno: %d. %s", [self fd], last_error, strerror(last_error)];
 }
 
 - (NSError *)checkForBadSocket {
-    if (_fd == kGDBadSocketFD) {
+    if ([self fd] == kGDBadSocketFD) {
         [NSError gduds_errorForCode:GDUnixSocketErrorBadSocket];
     }
     
@@ -117,7 +150,15 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
 }
 
 - (dispatch_fd_t)fd {
-    return _fd;
+    @synchronized(self) {
+        return _fd;
+    }
+}
+
+- (void)setFd:(dispatch_fd_t)fd {
+    @synchronized(self) {
+        _fd = fd;
+    }
 }
 
 #pragma mark - Life Cycle
@@ -126,6 +167,12 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocketConnection
     NSParameterAssert(socketPath);
     
     if (!socketPath.length) {
+        return nil;
+    }
+    
+    struct sockaddr_un address;
+    size_t allowed_size = sizeof(address.sun_path) - 1;
+    if (strlen([socketPath cStringUsingEncoding:NSUTF8StringEncoding]) > allowed_size) {
         return nil;
     }
     

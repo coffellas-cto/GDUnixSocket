@@ -43,13 +43,13 @@
 		9A0130EE1C6BB97900795EA8 /* GDUnixSocketExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GDUnixSocketExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A0130F21C6BB97900795EA8 /* GDUnixSocketExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketExampleTests.m; sourceTree = "<group>"; };
 		9A0130F41C6BB97900795EA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9A0130FE1C6BBA1300795EA8 /* GDUnixSocketConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketConnection.h; sourceTree = "<group>"; };
+		9A0130FE1C6BBA1300795EA8 /* GDUnixSocketConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GDUnixSocketConnection.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		9A0130FF1C6BBA1300795EA8 /* GDUnixSocketConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketConnection.m; sourceTree = "<group>"; };
-		9A0131011C6BC81500795EA8 /* GDUnixSocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketClient.h; sourceTree = "<group>"; };
+		9A0131011C6BC81500795EA8 /* GDUnixSocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GDUnixSocketClient.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		9A0131021C6BC81500795EA8 /* GDUnixSocketClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketClient.m; sourceTree = "<group>"; };
 		9A0131041C6BCA6300795EA8 /* GDUnixSocketConnection_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketConnection_Private.h; sourceTree = "<group>"; };
-		9A0131051C6BCE4200795EA8 /* GDUnixSocketServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketServer.h; sourceTree = "<group>"; };
-		9A0131061C6BCE4200795EA8 /* GDUnixSocketServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketServer.m; sourceTree = "<group>"; };
+		9A0131051C6BCE4200795EA8 /* GDUnixSocketServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GDUnixSocketServer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		9A0131061C6BCE4200795EA8 /* GDUnixSocketServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GDUnixSocketServer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

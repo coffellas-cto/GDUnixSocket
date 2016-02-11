@@ -8,14 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- Type for enumerated error codes.
- */
+/** Type for enumerated error codes. */
 typedef enum : NSUInteger {
     GDUnixSocketErrorUnknown = -3025,
     GDUnixSocketErrorBadSocket,
+    GDUnixSocketErrorBind,
+    GDUnixSocketErrorListen,
+    GDUnixSocketErrorAccept,
+    GDUnixSocketErrorUnlink,
     GDUnixSocketErrorConnect,
-    GDUnixSocketErrorSocketWrite
+    GDUnixSocketErrorSocketWrite,
+    GDUnixSocketErrorClose
 } GDUnixSocketError;
 
 /** Bad socket file descriptor (-1). */
@@ -25,17 +28,20 @@ extern const int kGDBadSocketFD;
 extern NSString * const kGDUnixSocketErrDomain;
 
 /**
- Base unix domain socket connection class.
+ Base Unix domain socket connection class.
  */
 @interface GDUnixSocketConnection : NSObject
 
 /** A path to socket. */
 @property (nonatomic, readonly, copy) NSString *socketPath;
 
+/** A unique socket connection identifier. */
+@property (nonatomic, readonly, copy) NSString *uniqueID;
+
 /**
  Initializes connection object with path to a socket.
- @param socketPath Path to unix domain socket. Cannot be `nil`.
- @return An initialized connection object. Returns `nil` if `socketPath` is empty.
+ @param socketPath Path to Unix domain socket. Cannot be `nil`.
+ @return An initialized connection object. Returns `nil` if `socketPath` is empty OR longer than 103 characters (Unix socket path length).
  */
 - (instancetype)initWithSocketPath:(NSString *)socketPath NS_DESIGNATED_INITIALIZER;
 
