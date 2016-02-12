@@ -59,6 +59,7 @@
 }
 
 - (void)connectWithAutoRead:(BOOL)autoRead completion:(void(^)(NSError *error))completion {
+    // TODO: Implement with non-blocking connect & select/poll.
 }
 
 #pragma mark - Overrides
