@@ -77,6 +77,8 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         [self mainLoop];
     });
     
+    self.state = GDUnixSocketStateListening;
+    
     if ([self.delegate respondsToSelector:@selector(unixSocketServerDidStartListening:)]) {
         [self.delegate unixSocketServerDidStartListening:self];
     }

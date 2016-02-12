@@ -17,6 +17,8 @@
 
 @interface GDUnixSocket ()
 
+@property (atomic, readwrite, assign) GDUnixSocketState state;
+
 - (NSString *)lastErrorInfo;
 - (NSError *)checkForBadSocket;
 - (dispatch_fd_t)fd;

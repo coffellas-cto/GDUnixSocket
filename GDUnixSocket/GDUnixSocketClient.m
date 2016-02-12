@@ -36,8 +36,8 @@
             retError = [NSError gduds_errorForCode:GDUnixSocketErrorListen info:@"The socket path is inconsistent"];
         } else {
             if (0 != connect(socket_fd, (struct sockaddr *)&address, sizeof(struct sockaddr_un))) {
-                [self close];
                 retError = [NSError gduds_errorForCode:GDUnixSocketErrorConnect info:[self lastErrorInfo]];
+                [self close];
             } else {
                 retVal = YES;
             }
@@ -48,11 +48,17 @@
         *error = retError;
     }
     
-    if (retVal && autoRead) {
-        [self readNext];
+    if (retVal) {
+        self.state = GDUnixSocketStateConnected;
+        if (autoRead) {
+            [self readNext];
+        }
     }
     
     return retVal;
+}
+
+- (void)connectWithAutoRead:(BOOL)autoRead completion:(void(^)(NSError *error))completion {
 }
 
 #pragma mark - Overrides

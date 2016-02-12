@@ -22,14 +22,25 @@
 @property (nonatomic, readwrite, weak) id<GDUnixSocketClientDelegate> delegate;
 
 /**
- Connects to the socket.
+ Connects to the socket synchronously. This is a blocking operation.
  @discussion First the address is retrieved from socket path (previously passed as an argument to designated initializer). Then it attempts to make a connection to the socket that is bound to that address. The socket is closed if any error occurs.
  
  If `autoRead` flag is set upon successful connection it immediately starts asynchronously reading on the created socket. The result is automatically sent to you if you have set a delegate object of `delegate` property.
+ @param autoRead If set the reading process starts immediately after successful connection.
  @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
  @return YES on success or NO otherwise.
  */
 - (BOOL)connectWithAutoRead:(BOOL)autoRead error:(NSError **)error;
+
+/**
+ Connects to the socket фsynchronously.
+ @discussion First the address is retrieved from socket path (previously passed as an argument to designated initializer). Then it attempts to make a connection to the socket that is bound to that address. The socket is closed if any error occurs.
+ 
+ If `autoRead` flag is set upon successful connection it immediately starts asynchronously reading on the created socket. The result is automatically sent to you if you have set a delegate object of `delegate` property.
+ @param autoRead If set the reading process starts immediately after successful connection.
+ @param completion Block to be called upon completion of connection operation. This block has no return value and receives one parameter: `error` if any error occurs.
+ */
+- (void)connectWithAutoRead:(BOOL)autoRead completion:(void(^)(NSError *error))completion;
 
 @end
 

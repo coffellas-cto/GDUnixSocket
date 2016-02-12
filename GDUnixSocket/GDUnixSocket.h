@@ -23,6 +23,14 @@ typedef enum : NSUInteger {
     GDUnixSocketErrorUnknownClient
 } GDUnixSocketError;
 
+/** Type for socket state. */
+typedef enum : NSUInteger {
+    GDUnixSocketStateUnknown,
+    GDUnixSocketStateConnected,
+    GDUnixSocketStateDisconnected,
+    GDUnixSocketStateListening
+} GDUnixSocketState;
+
 /** Bad socket file descriptor (-1). */
 extern const int kGDBadSocketFD;
 
@@ -36,6 +44,9 @@ extern NSString * const kGDUnixSocketErrDomain;
 
 /** A path to socket. */
 @property (nonatomic, readonly, copy) NSString *socketPath;
+
+/** Describes socket's state. */
+@property (atomic, readonly, assign) GDUnixSocketState state;
 
 /** A unique socket connection identifier. */
 @property (nonatomic, readonly, copy) NSString *uniqueID;
@@ -92,13 +103,13 @@ extern NSString * const kGDUnixSocketErrDomain;
 - (void)readWithCompletion:(void(^)(NSError *error, NSData *data))completion;
 
 /**
- Closes established connection.
+ Closes established connection. Does nothing if socket is already closed.
  @return YES on success, NO otherwise.
  */
 - (BOOL)close;
 
 /**
- Closes established connection.
+ Closes established connection. Does nothing if socket is already closed.
  @param error If an error occurs, upon return contains an NSError object that describes the problem. Can be `nil`.
  @return YES on success, NO otherwise.
  */

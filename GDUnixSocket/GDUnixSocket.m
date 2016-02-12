@@ -6,9 +6,10 @@
 //  Copyright © 2016 Alexey Gordiyenko. All rights reserved.
 //
 
-#import "GDUnixSocket.h"
+#import "GDUnixSocket_Private.h"
 
 #import <sys/un.h>
+#import <sys/socket.h>
 
 #pragma mark - Constants
 
@@ -132,12 +133,18 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 }
 
 - (BOOL)closeWithError:(NSError **)error {
+    if (self.state == GDUnixSocketStateDisconnected) {
+        return YES;
+    }
+    
     BOOL retVal = NO;
     NSError *retError = [self checkForBadSocket];
     if (!retError) {
         retVal = close([self fd]) != -1;
         if (!retVal) {
             retError = [NSError gduds_errorForCode:GDUnixSocketErrorClose info:[self lastErrorInfo]];
+        } else {
+            NSLog(@"closed socket [%d]", [self fd]);
         }
         
         [self setFd:kGDBadSocketFD];
@@ -145,6 +152,10 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
     
     if (retError && error) {
         *error = retError;
+    }
+    
+    if (retVal) {
+        self.state = GDUnixSocketStateDisconnected;
     }
     
     return retVal;
@@ -203,8 +214,13 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 }
 
 - (NSString *)lastErrorInfoForSocket:(dispatch_fd_t)socket_fd {
-    int last_error = errno;
-    return [NSString stringWithFormat:@"fd: %d. errno: %d. %s", socket_fd, last_error, strerror(last_error)];
+    int error;
+    // TODO: Switch to `getsockopt`. The code commented out below is not accurate.
+//    socklen_t len = sizeof(error);
+//    if (-1 == getsockopt(socket_fd, SOL_SOCKET, SO_ERROR, &error, &len)) {
+        error = errno;
+//    }
+    return [NSString stringWithFormat:@"fd: %d. errno: %d. %s", socket_fd, error, strerror(error)];
 }
 
 - (NSError *)checkForBadSocket {
