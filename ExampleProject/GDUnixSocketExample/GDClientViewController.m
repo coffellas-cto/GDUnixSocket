@@ -22,6 +22,30 @@
 #pragma mark - Stuff
 
 - (IBAction)messageToServerTapped:(id)sender {
+    __block UITextField *textFieldKey = nil;
+    __block UITextField *textFieldValue = nil;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Input message"
+                                                                   message:@""
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Send" style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * action) {
+                                                [self sendMessageToServer:@{textFieldKey.text.length ? textFieldKey.text : @"dummy":
+                                                                                textFieldValue.text.length ? textFieldValue.text : @"dummy"}];
+                                            }]];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *aTextField) {
+        aTextField.placeholder = @"Key";
+        textFieldKey = aTextField;
+    }];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *aTextField) {
+        aTextField.placeholder = @"Value";
+        textFieldValue = aTextField;
+    }];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)sendMessageToServer:(NSDictionary *)message {
+    NSData *data = [NSJSONSerialization dataWithJSONObject:message options:0 error:nil];
+    [self.client.clientConnection writeData:data completion:nil];
 }
 
 - (void)showErrorWithTitle:(NSString *)title text:(NSString *)text {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
@@ -218,9 +218,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="301"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="LGI-fT-tUM">
-                                <rect key="frame" x="0.0" y="44" width="600" height="213"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="LGI-fT-tUM">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="257"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <sections/>
                                 <connections>
                                     <outlet property="dataSource" destination="exG-tg-CgG" id="iG0-fk-egY"/>
@@ -241,6 +241,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="LGI-fT-tUM" firstAttribute="leading" secondItem="aww-4E-LJ7" secondAttribute="leading" id="8SI-Kb-OVe"/>
+                            <constraint firstItem="LGI-fT-tUM" firstAttribute="top" secondItem="aww-4E-LJ7" secondAttribute="top" id="G5a-k7-xPk"/>
                             <constraint firstItem="cWn-Zg-sry" firstAttribute="top" secondItem="LGI-fT-tUM" secondAttribute="bottom" id="QRy-Vu-8sL"/>
                             <constraint firstAttribute="trailing" secondItem="cWn-Zg-sry" secondAttribute="trailing" id="a8l-ZG-zTc"/>
                             <constraint firstAttribute="trailing" secondItem="LGI-fT-tUM" secondAttribute="trailing" id="bRK-6h-e53"/>
@@ -251,6 +252,7 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="bib-YI-wan"/>
                                 <exclude reference="zQT-Hf-dCe"/>
                             </mask>
                         </variation>

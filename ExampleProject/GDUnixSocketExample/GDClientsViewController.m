@@ -38,7 +38,26 @@
 
 @synthesize clients = _clients;
 
+#pragma mark - Errors
+
+- (void)showErrorWithTitle:(NSString *)title text:(NSString *)text {
+    [[[UIAlertView alloc] initWithTitle:title message:text delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+}
+
+- (void)showErrorWithText:(NSString *)text {
+    [self showErrorWithTitle:@"Error" text:text];
+}
+
 #pragma mark - KVO
+
+- (void)sendMessageToServer:(NSDictionary *)message fromClientConnection:(GDUnixSocketClient *)clientConnection {
+    NSData *data = [NSJSONSerialization dataWithJSONObject:message options:0 error:nil];
+    [clientConnection writeData:data completion:^(NSError *error, ssize_t size) {
+        if (error) {
+            [self showErrorWithTitle:[NSString stringWithFormat:@"%@ failed to send message to server", clientConnection.uniqueID] text:error.localizedDescription];
+        }
+    }];
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -57,6 +76,10 @@
     for (GDClient *client in self.clients) {
         if ([client.clientConnection.uniqueID isEqualToString:unixSocketClient.uniqueID]) {
             [client addServerMessage:dataSting];
+            if ([dataSting isEqualToString:@"Your name?"]) {
+                // Tell server your name
+                [self sendMessageToServer:@{@"name": client.name} fromClientConnection:unixSocketClient];
+            }
             break;
         }
     }

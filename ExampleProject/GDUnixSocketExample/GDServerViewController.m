@@ -105,6 +105,31 @@
     }];
 }
 
+- (void)processMessage:(NSData *)data fromClientWithID:(NSString *)clientID {
+    NSError *JSONError = nil;
+    NSDictionary *message = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONError];
+    if (JSONError) {
+        [self addLogLine:[NSString stringWithFormat:@"Failed to parse message from client %@: %@", clientID, JSONError]];
+        return;
+    }
+    
+    NSString *name = message[@"name"];
+    NSString *cmd = message[@"cmd"];
+    if (name) {
+        [self sendMessage:[NSString stringWithFormat:@"Hello %@", name] toClientWithID:clientID];
+        return;
+    }
+    
+    if (cmd) {
+        if ([cmd isEqualToString:@"time"]) {
+            [self sendMessage:[NSString stringWithFormat:@"%@", [NSDate date]] toClientWithID:clientID];
+            return;
+        }
+    }
+    
+    [self sendMessage:[NSString stringWithFormat:@"Unknown message %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]] toClientWithID:clientID];
+}
+
 #pragma mark - GDUnixSocketServerDelegate Methods
 
 - (void)unixSocketServerDidStartListening:(GDUnixSocketServer *)unixSocketServer {
@@ -125,8 +150,9 @@
 }
 
 - (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didReceiveData:(NSData *)data fromClientWithID:(NSString *)clientID {
-    NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    [self addLogLine:[NSString stringWithFormat:@"Received message from client %@\n%@", clientID, message]];
+    NSString *messageString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    [self addLogLine:[NSString stringWithFormat:@"Received message from client %@\n%@", clientID, messageString]];
+    [self processMessage:data fromClientWithID:clientID];
 }
 
 - (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didFailToReadForClientID:(NSString *)clientID error:(NSError *)error {
