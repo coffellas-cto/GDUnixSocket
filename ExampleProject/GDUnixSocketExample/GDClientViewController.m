@@ -57,7 +57,8 @@
         }
         
         NSError *error;
-        if ([connection connectWithError:&error]) {
+        connection.delegate = self.clientDelegate;
+        if ([connection connectWithAutoRead:YES error:&error]) {
             self.client.connected = YES;
             self.client.clientConnection = connection;
         } else {
@@ -76,8 +77,23 @@
     [super viewDidLoad];
     self.title = self.client.name;
     
+    [self.client addObserver:self forKeyPath:NSStringFromSelector(@selector(serverMessages)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:NULL];
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(connectTapped)];
     [self updateState];
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(serverMessages))]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.table reloadData];
+        });
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 #pragma mark - UITableView Delegates Methods
@@ -89,6 +105,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     
+    cell.textLabel.text = self.client.serverMessages[indexPath.row];
+    
     return cell;
 }
 
@@ -98,6 +116,12 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     return @"Messages from server";
+}
+
+#pragma mark - Life Cycle
+
+- (void)dealloc {
+    [self.client removeObserver:self forKeyPath:NSStringFromSelector(@selector(serverMessages))];
 }
 
 @end

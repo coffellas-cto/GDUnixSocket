@@ -13,5 +13,6 @@
 @interface GDClientViewController : UIViewController
 
 @property GDClient *client;
+@property id clientDelegate;
 
 @end

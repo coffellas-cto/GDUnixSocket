@@ -19,7 +19,7 @@
 
 #pragma mark - Public Methods
 
-- (BOOL)connectWithError:(NSError **)error {
+- (BOOL)connectWithAutoRead:(BOOL)autoRead error:(NSError **)error {
     BOOL retVal = NO;
     NSError *retError = nil;
     dispatch_fd_t socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -48,7 +48,45 @@
         *error = retError;
     }
     
+    if (retVal && autoRead) {
+        [self readNext];
+    }
+    
     return retVal;
+}
+
+#pragma mark - Overrides
+
+- (NSData *)readWithError:(NSError **)error {
+    NSError *readError = nil;
+    NSData *data = [super readWithError:&readError];
+    if (readError) {
+        if ([self.delegate respondsToSelector:@selector(unixSocketClient:didFailToReadWithError:)]) {
+            [self.delegate unixSocketClient:self didFailToReadWithError:readError];
+        }
+        
+        if (error) {
+            *error = readError;
+        }
+    } else if (data) {
+        if ([self.delegate respondsToSelector:@selector(unixSocketClient:didReceiveData:)]) {
+            [self.delegate unixSocketClient:self didReceiveData:data];
+        }
+    }
+    
+    return data;
+}
+
+#pragma mark - Private Methods
+
+- (void)readNext {
+    [self readWithCompletion:^(NSError *error, NSData *data) {
+        if (data) {
+            [self readNext];
+        } else {
+            [self close];
+        }
+    }];
 }
 
 @end

@@ -93,6 +93,18 @@
     [self addLogLine:line error:nil];
 }
 
+#pragma mark - Communication
+
+- (void)sendMessage:(NSString *)message toClientWithID:(NSString *)clientID {
+    [self.server sendData:[message dataUsingEncoding:NSUTF8StringEncoding] toClientWithID:clientID completion:^(NSError *error, ssize_t size) {
+        if (error) {
+            [self addLogLine:[NSString stringWithFormat:@"Failed to send message \"%@\" to client %@", message, clientID] error:error];
+        } else {
+            [self addLogLine:[NSString stringWithFormat:@"Sent message \"%@\" to client %@", message, clientID]];
+        }
+    }];
+}
+
 #pragma mark - GDUnixSocketServerDelegate Methods
 
 - (void)unixSocketServerDidStartListening:(GDUnixSocketServer *)unixSocketServer {
@@ -105,6 +117,7 @@
 
 - (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer didAcceptClientWithID:(NSString *)newClientID {
     [self addLogLine:[NSString stringWithFormat:@"Accepted client %@", newClientID]];
+    [self sendMessage:@"Your name?" toClientWithID:newClientID];
 }
 
 - (void)unixSocketServer:(GDUnixSocketServer *)unixSocketServer clientWithIDDidDisconnect:(NSString *)clientID {
