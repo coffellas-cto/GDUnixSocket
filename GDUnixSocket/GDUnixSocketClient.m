@@ -60,6 +60,7 @@
 
 - (void)connectWithAutoRead:(BOOL)autoRead completion:(void(^)(NSError *error))completion {
     // TODO: Implement with non-blocking connect & select/poll.
+    NSAssert(NO, @"Sorry, this one is not implemented");
 }
 
 #pragma mark - Overrides
