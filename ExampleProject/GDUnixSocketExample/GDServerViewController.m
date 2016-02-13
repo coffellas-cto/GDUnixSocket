@@ -117,6 +117,7 @@
     NSString *cmd = message[@"cmd"];
     if (name) {
         [self sendMessage:[NSString stringWithFormat:@"Hello %@", name] toClientWithID:clientID];
+        [self sendMessage:@"Usage: \"cmd\":\"time\"" toClientWithID:clientID];
         return;
     }
     
