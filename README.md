@@ -25,7 +25,7 @@ The framework consists of three main classes:
 
 The main channel of communication for both of these working classes is the actual file located somewhere in your file system. In order to initialize client or server you have to pass a path to this file as a parameter to initializer. For example:
 
-```
+```objc
 NSString *socketPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"test_socket"];
 GDUnixSocketClient *client = [[GDUnixSocketClient alloc] initWithSocketPath:socketPath];
 ```
@@ -41,7 +41,7 @@ Follow this rule: first you run server, then you connect clients. In order to st
 
 Upon success of initialization you can start listening on newly created socket by calling one of the `listenWithMaxConnections:error:` or `listenWithError:` methods:
 
-```
+```objc
 self.server = [[GDUnixSocketServer alloc] initWithSocketPath:socketPath];
 self.server.delegate = self;
 NSError *error;
@@ -57,7 +57,7 @@ You can set a delegate object for your server (which conforms to `GDUnixSocketSe
 ###3. Connecting a client.
 After your server is set up and listening you can freely create a client (as described in **1**) and try to connect to server:
 
-```
+```objc
 NSError *error;
 client.delegate = self.clientDelegate;
 if ([client connectWithAutoRead:YES error:&error]) {
@@ -80,7 +80,7 @@ When a new client connects, your server's delegate receives a message `unixSocke
 
 So, you can send data to a client described by this identifier by calling `sendData:toClientWithID:error:` method or its asynchronous friend `sendData:toClientWithID:completion:` on your server object:
 
-```
+```objc
 - (void)sendMessage:(NSString *)message toClientWithID:(NSString *)clientID {
     [self.server sendData:[message dataUsingEncoding:NSUTF8StringEncoding] toClientWithID:clientID completion:^(NSError *error, ssize_t size) {
         if (error) {
@@ -100,7 +100,7 @@ You generally don't have to do so for servers and for a client which was connect
 ###6. Protocols
 Protocol of `GDUnixSocketClient`'s delegate:
 
-```
+```objc
 @protocol GDUnixSocketClientDelegate <NSObject>
 @optional
 - (void)unixSocketClient:(GDUnixSocketClient *)unixSocketClient didReceiveData:(NSData *)data;
@@ -110,7 +110,7 @@ Protocol of `GDUnixSocketClient`'s delegate:
 
 Protocol of `GDUnixSocketServer`'s delegate:
 
-```
+```objc
 @protocol GDUnixSocketServerDelegate <NSObject>
 @optional
 - (void)unixSocketServerDidStartListening:(GDUnixSocketServer *)unixSocketServer;
