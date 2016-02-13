@@ -20,6 +20,8 @@
 		9A01310D1C6CE5DB00795EA8 /* GDClientsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A01310C1C6CE5DB00795EA8 /* GDClientsViewController.m */; };
 		9A0131101C6CF18900795EA8 /* GDClientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A01310F1C6CF18900795EA8 /* GDClientViewController.m */; };
 		9A01A35A1C6F5F5200A2A466 /* GDUnixSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A01A3591C6F5F5200A2A466 /* GDUnixSocketTests.m */; };
+		9A8F3FB21C6FD4B000768D25 /* GDUnixSocketServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8F3FB11C6FD4B000768D25 /* GDUnixSocketServerTests.m */; };
+		9A8F3FB71C6FD4F700768D25 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8F3FB61C6FD4F700768D25 /* Common.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,9 @@
 		9A01310F1C6CF18900795EA8 /* GDClientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GDClientViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9A01A3571C6F5EB100A2A466 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		9A01A3591C6F5F5200A2A466 /* GDUnixSocketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketTests.m; sourceTree = "<group>"; };
+		9A8F3FB11C6FD4B000768D25 /* GDUnixSocketServerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketServerTests.m; sourceTree = "<group>"; };
+		9A8F3FB51C6FD4F700768D25 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		9A8F3FB61C6FD4F700768D25 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Common.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +139,9 @@
 			children = (
 				9A0130F41C6BB97900795EA8 /* Info.plist */,
 				9A01A3591C6F5F5200A2A466 /* GDUnixSocketTests.m */,
+				9A8F3FB11C6FD4B000768D25 /* GDUnixSocketServerTests.m */,
+				9A8F3FB51C6FD4F700768D25 /* Common.h */,
+				9A8F3FB61C6FD4F700768D25 /* Common.m */,
 			);
 			path = GDUnixSocketExampleTests;
 			sourceTree = "<group>";
@@ -271,6 +279,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A8F3FB71C6FD4F700768D25 /* Common.m in Sources */,
+				9A8F3FB21C6FD4B000768D25 /* GDUnixSocketServerTests.m in Sources */,
 				9A01A35A1C6F5F5200A2A466 /* GDUnixSocketTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,6 +434,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					GD_UNIX_SOCKET_DEBUG,
+				);
 				INFOPLIST_FILE = GDUnixSocketExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coffellas.GDUnixSocketExampleTests;
@@ -437,6 +452,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				GCC_PREPROCESSOR_DEFINITIONS = GD_UNIX_SOCKET_DEBUG;
 				INFOPLIST_FILE = GDUnixSocketExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coffellas.GDUnixSocketExampleTests;

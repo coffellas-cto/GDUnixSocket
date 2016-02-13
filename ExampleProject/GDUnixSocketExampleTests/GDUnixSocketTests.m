@@ -7,13 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "GDUnixSocket.h"
-
-#if TARGET_OS_SIMULATOR
-NSString *gTestSocketPath = @"/tmp/test_socket";
-#else
-NSString *gTestSocketPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"test_socket"];
-#endif /* TARGET_OS_SIMULATOR */
+#import "Common.h"
+#import "GDUnixSocket_Private.h"
 
 @interface GDUnixSocketTests : XCTestCase
 
@@ -60,6 +55,12 @@ NSString *gTestSocketPath = [NSTemporaryDirectory() stringByAppendingPathCompone
     XCTAssertNil(socket);
 }
 
+- (void)testDummy {
+    GDUnixSocket *socket = [[GDUnixSocket alloc] initWithSocketPath:kGDDummySocketPath];
+    XCTAssertNotNil(socket);
+    XCTAssertEqualObjects(kGDDummySocketPath, socket.socketPath);
+}
+
 - (void)testInit {
     GDUnixSocket *socket = [[GDUnixSocket alloc] initWithSocketPath:gTestSocketPath];
     XCTAssertNotNil(socket);
@@ -84,6 +85,13 @@ NSString *gTestSocketPath = [NSTemporaryDirectory() stringByAppendingPathCompone
     XCTAssertFalse([socket closeWithError:&error]);
     XCTAssertEqual(error.code, GDUnixSocketErrorClose);
     XCTAssertEqual(socket.state, GDUnixSocketStateUnknown);
+}
+
+- (void)testDescription {
+    GDUnixSocket *socket = [[GDUnixSocket alloc] initWithSocketPath:gTestSocketPath];
+    NSString *ID = socket.uniqueID;
+    XCTAssertEqualObjects(socket.description, ID);
+    XCTAssertEqualObjects(socket.debugDescription, ID);
 }
 
 @end

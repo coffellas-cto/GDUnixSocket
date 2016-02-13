@@ -231,7 +231,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
             }
             break;
         } else {
-            GDUnixSocket *newConnection = [[GDUnixSocket alloc] initWithSocketPath:@"(dummy)"];
+            GDUnixSocket *newConnection = [[GDUnixSocket alloc] initWithSocketPath:kGDDummySocketPath];
             [newConnection setFd:connection_fd];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 [self readOnConnection:newConnection];
@@ -270,6 +270,9 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 
 - (void)addClient:(GDUnixSocket *)client {
     @synchronized(self) {
+        if (!client) {
+            [NSException raise:NSInternalInconsistencyException format:@"Cannot add empty client"];
+        }
         self.connectedClients[client.uniqueID] = client;
     }
 }

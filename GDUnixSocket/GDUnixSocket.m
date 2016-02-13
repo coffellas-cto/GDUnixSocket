@@ -37,6 +37,7 @@
 
 const int kGDBadSocketFD = -1;
 NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
+NSString * const kGDDummySocketPath = @"(dummy)";
 
 #pragma mark - NSError
 
@@ -286,29 +287,32 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
 - (instancetype)initWithSocketPath:(NSString *)socketPath andFragmentSize:(size_t)fragmentSize {
     NSParameterAssert(socketPath);
     
-    if (!socketPath.length) {
-        return nil;
-    }
-    
-    NSString *standardizedPath = [socketPath stringByStandardizingPath]; // Returns self if an error occurs.
-    if (![standardizedPath isEqualToString:socketPath]) {
-        return nil;
-    }
-    
-    if (![standardizedPath containsString:@"/"]) {
-        return nil;
-    }
-    
-    struct sockaddr_un address;
-    size_t allowed_size = sizeof(address.sun_path) - 1;
-    if (strlen([socketPath cStringUsingEncoding:NSUTF8StringEncoding]) > allowed_size) {
-        return nil;
-    }
-    
     self = [super init];
     if (self) {
-        _socketPath = [socketPath copy];
         _fd = kGDBadSocketFD;
+        
+        if (!socketPath.length) {
+            return nil;
+        }
+        
+        if (![socketPath isEqualToString:kGDDummySocketPath]) {
+            NSString *standardizedPath = [socketPath stringByStandardizingPath]; // Returns self if an error occurs.
+            if (![standardizedPath isEqualToString:socketPath]) {
+                return nil;
+            }
+            
+            if (![standardizedPath containsString:@"/"]) {
+                return nil;
+            }
+        }
+        
+        struct sockaddr_un address;
+        size_t allowed_size = sizeof(address.sun_path) - 1;
+        if (strlen([socketPath cStringUsingEncoding:NSUTF8StringEncoding]) > allowed_size) {
+            return nil;
+        }
+
+        _socketPath = [socketPath copy];
         _fragmentSize = fragmentSize;
     }
     

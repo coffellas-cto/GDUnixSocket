@@ -30,6 +30,9 @@
 
 #import "GDUnixSocket.h"
 
+/** Dummy socket path for internal use. */
+extern NSString * const kGDDummySocketPath;
+
 @interface NSError (GDUnixSocket)
 
 + (NSError *)gduds_errorForCode:(GDUnixSocketError)code;
