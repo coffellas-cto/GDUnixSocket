@@ -113,6 +113,10 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 
 #pragma mark - Overrides
 
+- (ssize_t)writeData:(NSData *)data error:(NSError **)error {
+    return 0;
+}
+
 - (BOOL)closeWithError:(NSError **)error {
     return [self closeWithError:error informDelegate:YES];
 }
