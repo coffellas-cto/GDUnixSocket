@@ -114,6 +114,9 @@
     if ([keyPath isEqualToString:NSStringFromSelector(@selector(serverMessages))]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.table reloadData];
+            if (self.client.serverMessages.count) {
+                [self.table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.client.serverMessages.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            }
         });
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];

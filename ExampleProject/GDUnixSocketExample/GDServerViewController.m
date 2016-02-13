@@ -86,6 +86,8 @@
         f.dateFormat = @"dd-MM HH:mm:ss";
         self.logView.text = [self.logView.text stringByAppendingString:[NSString stringWithFormat:@"\n[%@] %@%@", [f stringFromDate:date], line, errorString]];
         self.trashButton.enabled = YES;
+        [self.logView.layoutManager ensureLayoutForTextContainer:self.logView.textContainer];
+        [self.logView scrollRangeToVisible:NSMakeRange(self.logView.text.length, 0)];
     });
 }
 
