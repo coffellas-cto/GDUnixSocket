@@ -30,6 +30,12 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef GD_UNIX_SOCKET_DEBUG
+#define GDUnixSocketLog(format, ...) NSLog((@"" format), ##__VA_ARGS__)
+#else
+#define GDUnixSocketLog(...)
+#endif
+
 /** Type for enumerated error codes. */
 typedef enum : NSUInteger {
     GDUnixSocketErrorUnknown = -3025,

@@ -57,9 +57,9 @@
 		9A0131081C6CE5BA00795EA8 /* GDServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDServerViewController.h; sourceTree = "<group>"; };
 		9A0131091C6CE5BA00795EA8 /* GDServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDServerViewController.m; sourceTree = "<group>"; };
 		9A01310B1C6CE5DB00795EA8 /* GDClientsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDClientsViewController.h; sourceTree = "<group>"; };
-		9A01310C1C6CE5DB00795EA8 /* GDClientsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDClientsViewController.m; sourceTree = "<group>"; };
+		9A01310C1C6CE5DB00795EA8 /* GDClientsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GDClientsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9A01310E1C6CF18900795EA8 /* GDClientViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDClientViewController.h; sourceTree = "<group>"; };
-		9A01310F1C6CF18900795EA8 /* GDClientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDClientViewController.m; sourceTree = "<group>"; };
+		9A01310F1C6CF18900795EA8 /* GDClientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GDClientViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9A01A3571C6F5EB100A2A466 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		9A01A3591C6F5F5200A2A466 /* GDUnixSocketTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -396,6 +396,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					GD_UNIX_SOCKET_DEBUG,
+				);
 				INFOPLIST_FILE = GDUnixSocketExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -409,6 +414,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PREPROCESSOR_DEFINITIONS = GD_UNIX_SOCKET_DEBUG;
 				INFOPLIST_FILE = GDUnixSocketExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -89,7 +89,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
         localizedDescription = [NSString stringWithFormat:@"%@. %@", localizedDescription, infoString];
     }
     
-    NSLog(@"Error: %@", localizedDescription);
+    GDUnixSocketLog(@"Error: %@", localizedDescription);
     
     return [NSError errorWithDomain:kGDUnixSocketErrDomain code:code userInfo:@{NSLocalizedDescriptionKey: localizedDescription}];
 }
@@ -166,7 +166,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
         if (!retVal) {
             retError = [NSError gduds_errorForCode:GDUnixSocketErrorClose info:[self lastErrorInfo]];
         } else {
-            NSLog(@"closed socket [%d]", [self fd]);
+            GDUnixSocketLog(@"closed socket [%d]", [self fd]);
         }
         
         [self setFd:kGDBadSocketFD];
@@ -195,7 +195,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
             *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketRead info:[self lastErrorInfoForSocket:socket_fd]];
         }
     } else {
-        NSLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
+        GDUnixSocketLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
         if (bytes_read) {
             retVal = [NSData dataWithBytes:buffer length:bytes_read];
         }
@@ -227,7 +227,7 @@ NSString * const kGDUnixSocketErrDomain = @"com.coffellas.GDUnixSocket";
         *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketWrite info:[self lastErrorInfoForSocket:socket_fd]];
     }
     
-    NSLog(@"written %zd bytes on socket [%d]: %s", written, socket_fd, buffer);
+    GDUnixSocketLog(@"written %zd bytes on socket [%d]: %s", written, socket_fd, buffer);
     return written;
 }
 
