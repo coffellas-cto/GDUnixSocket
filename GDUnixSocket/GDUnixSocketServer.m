@@ -275,7 +275,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 
 - (BOOL)clientExists:(GDUnixSocket *)client {
     @synchronized(self) {
-        return self.connectedClients[client.uniqueID];
+        return self.connectedClients[client.uniqueID] != nil;
     }
 }
 
