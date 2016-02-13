@@ -129,3 +129,5 @@ It would be nice to have a non-blocking implementation rather then calling block
 
 ##License
 Published under MIT license. If you have any feature requests, please create an issue. Smart pull requests are also welcome.
+
+Copyright (c) 2016 Alex Gordiyenko
