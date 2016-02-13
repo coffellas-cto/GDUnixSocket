@@ -7,6 +7,13 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "GDUnixSocket.h"
+
+#if TARGET_OS_SIMULATOR
+NSString *gTestSocketPath = @"/tmp/test_socket";
+#else
+NSString *gTestSocketPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"test_socket"];
+#endif /* TARGET_OS_SIMULATOR */
 
 @interface GDUnixSocketTests : XCTestCase
 
@@ -24,16 +31,59 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testInitFail {
+    GDUnixSocket *socket = nil;
+#ifdef DEBUG
+    @try {
+        socket = [[GDUnixSocket alloc] init];
+    }
+    @catch (NSException *exception) {
+        XCTAssertEqualObjects(exception.name, NSInternalInconsistencyException);
+    }
+    @finally {
+        XCTAssertNil(socket);
+    }
+#else
+    XCTAssertNil(socket);
+#endif
+    
+    socket = [[GDUnixSocket alloc] initWithSocketPath:@""];
+    XCTAssertNil(socket);
+    
+    socket = [[GDUnixSocket alloc] initWithSocketPath:@"not a path"];
+    XCTAssertNil(socket);
+    
+    socket = [[GDUnixSocket alloc] initWithSocketPath:@"strange//path/"];
+    XCTAssertNil(socket);
+    
+    socket = [[GDUnixSocket alloc] initWithSocketPath:@"very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path/very/long/path"];
+    XCTAssertNil(socket);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testInit {
+    GDUnixSocket *socket = [[GDUnixSocket alloc] initWithSocketPath:gTestSocketPath];
+    XCTAssertNotNil(socket);
+    XCTAssertEqualObjects(gTestSocketPath, socket.socketPath);
+    NSString *uniqueID0 = socket.uniqueID;
+    XCTAssertNotNil(uniqueID0);
+    XCTAssertEqual(socket.fragmentSize, 256);
+    XCTAssertEqual(socket.state, GDUnixSocketStateUnknown);
+    
+    socket = [[GDUnixSocket alloc] initWithSocketPath:gTestSocketPath andFragmentSize:1024];
+    XCTAssertNotNil(socket);
+    NSString *uniqueID1 = socket.uniqueID;
+    XCTAssertNotNil(uniqueID0);
+    XCTAssertNotEqualObjects(uniqueID0, uniqueID1);
+    XCTAssertEqual(socket.fragmentSize, 1024);
+    XCTAssertEqual(socket.state, GDUnixSocketStateUnknown);
+}
+
+- (void)testCloseUnopened {
+    GDUnixSocket *socket = [[GDUnixSocket alloc] initWithSocketPath:gTestSocketPath];
+    NSError *error;
+    XCTAssertFalse([socket closeWithError:&error]);
+    XCTAssertEqual(error.code, GDUnixSocketErrorClose);
+    XCTAssertEqual(socket.state, GDUnixSocketStateUnknown);
 }
 
 @end
