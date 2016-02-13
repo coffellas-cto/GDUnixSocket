@@ -1,6 +1,8 @@
 # GDUnixSocket
 Unix Domain Sockets for Objective-C
 
+![screen_record](https://cloud.githubusercontent.com/assets/3193877/13028486/1de4f2a0-d279-11e5-9dff-beb4067829bc.gif)
+
 ##About
 Unix domain sockets are designed specifically for local interprocess communication. See [this](http://man7.org/linux/man-pages/man7/unix.7.html) for clarification.
 
