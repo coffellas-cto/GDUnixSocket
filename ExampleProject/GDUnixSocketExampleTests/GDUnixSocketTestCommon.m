@@ -6,11 +6,7 @@
 //  Copyright © 2016 Alexey Gordiyenko. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-
-@interface GDUnixSocketTestCommon : XCTestCase
-
-@end
+#import "GDUnixSocketTestCommon.h"
 
 @implementation GDUnixSocketTestCommon
 
@@ -24,16 +20,16 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (GDUnixSocketServer *)startedServer {
+    GDUnixSocketServer *server = [[GDUnixSocketServer alloc] initWithSocketPath:gTestSocketPath];
+    XCTAssertNotNil(server);
+    
+    NSError *error;
+    BOOL started = [server listenWithError:&error];
+    XCTAssertTrue(started);
+    XCTAssertNil(error);
+    XCTAssertEqual(server.state, GDUnixSocketStateListening);
+    return server;
 }
 
 @end

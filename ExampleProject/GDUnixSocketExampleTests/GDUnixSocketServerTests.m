@@ -9,8 +9,11 @@
 #import <XCTest/XCTest.h>
 #import "Common.h"
 #import "GDUnixSocketServer.h"
+#import "GDUnixSocketTestCommon.h"
 
-@interface GDUnixSocketServerTests : XCTestCase
+@interface GDUnixSocketServerTests : GDUnixSocketTestCommon <GDUnixSocketServerDelegate> {
+    GDUnixSocketServer *_server;
+}
 
 @end
 
@@ -26,20 +29,21 @@
     [super tearDown];
 }
 
-- (GDUnixSocketServer *)startedServer {
-    GDUnixSocketServer *server = [[GDUnixSocketServer alloc] initWithSocketPath:gTestSocketPath];
-    XCTAssertNotNil(server);
+- (void)testStartingNoClose {
+    _server = [[GDUnixSocketServer alloc] initWithSocketPath:gTestSocketPath];
+    XCTAssertNotNil(_server);
+    
+    _server.delegate = self;
     
     NSError *error;
-    BOOL started = [server listenWithError:&error];
+    BOOL started = [_server listenWithError:&error];
     XCTAssertTrue(started);
     XCTAssertNil(error);
-    XCTAssertEqual(server.state, GDUnixSocketStateListening);
-    return server;
-}
-
-- (void)testStartingNoClose {
-    [self startedServer];
+    XCTAssertEqual(_server.state, GDUnixSocketStateListening);
+    
+    BOOL closed = [_server closeWithError:&error];
+    XCTAssertTrue(closed);
+    XCTAssertNil(error);
 }
 
 - (void)testClose {
@@ -57,6 +61,17 @@
     closed = [server closeWithError:&error];
     XCTAssertTrue(closed);
     XCTAssertNil(error);
+}
+
+#pragma mark - 
+
+- (void)unixSocketServerDidStartListening:(GDUnixSocketServer *)unixSocketServer {
+    XCTAssertTrue(_server == unixSocketServer);
+}
+
+- (void)unixSocketServerDidClose:(GDUnixSocketServer *)unixSocketServer error:(NSError *)error {
+    XCTAssertNil(error);
+    XCTAssertTrue(_server == unixSocketServer);
 }
 
 @end

@@ -7,8 +7,11 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "GDUnixSocketServer.h"
+#import "GDUnixSocketClient.h"
+#import "GDUnixSocketTestCommon.h"
 
-@interface GDUnixSocketClientTest : XCTestCase
+@interface GDUnixSocketClientTest : GDUnixSocketTestCommon
 
 @end
 
@@ -24,16 +27,29 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testConnectAutoReadFailure {
+    GDUnixSocketClient *client = [[GDUnixSocketClient alloc] initWithSocketPath:gTestSocketPath];
+    XCTAssertNotNil(client);
+    
+    NSError *error;
+    BOOL connected = [client connectWithAutoRead:YES error:&error];
+    XCTAssertFalse(connected);
+    XCTAssertEqual(error.code, GDUnixSocketErrorConnect);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testConnectAutoRead {
+    [self startedServer];
+    GDUnixSocketClient *client = [[GDUnixSocketClient alloc] initWithSocketPath:gTestSocketPath];
+    XCTAssertNotNil(client);
+    
+    NSError *error;
+    BOOL connected = [client connectWithAutoRead:YES error:&error];
+    XCTAssertTrue(connected);
+    XCTAssertNil(error);
+    
+    BOOL closed = [client closeWithError:&error];
+    XCTAssertTrue(closed);
+    XCTAssertNil(error);
 }
 
 @end

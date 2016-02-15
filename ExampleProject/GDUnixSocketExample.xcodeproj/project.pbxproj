@@ -22,6 +22,8 @@
 		9A01A35A1C6F5F5200A2A466 /* GDUnixSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A01A3591C6F5F5200A2A466 /* GDUnixSocketTests.m */; };
 		9A8F3FB21C6FD4B000768D25 /* GDUnixSocketServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8F3FB11C6FD4B000768D25 /* GDUnixSocketServerTests.m */; };
 		9A8F3FB71C6FD4F700768D25 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8F3FB61C6FD4F700768D25 /* Common.m */; };
+		FA350BC61C7230A900E00B03 /* GDUnixSocketTestCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = FA350BC51C7230A900E00B03 /* GDUnixSocketTestCommon.m */; };
+		FA350BC91C72320E00E00B03 /* GDUnixSocketClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA350BC81C72320E00E00B03 /* GDUnixSocketClientTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,9 @@
 		9A8F3FB11C6FD4B000768D25 /* GDUnixSocketServerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketServerTests.m; sourceTree = "<group>"; };
 		9A8F3FB51C6FD4F700768D25 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		9A8F3FB61C6FD4F700768D25 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Common.m; sourceTree = "<group>"; };
+		FA350BC51C7230A900E00B03 /* GDUnixSocketTestCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketTestCommon.m; sourceTree = "<group>"; };
+		FA350BC71C72312400E00B03 /* GDUnixSocketTestCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GDUnixSocketTestCommon.h; sourceTree = "<group>"; };
+		FA350BC81C72320E00E00B03 /* GDUnixSocketClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDUnixSocketClientTest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,8 +145,11 @@
 				9A0130F41C6BB97900795EA8 /* Info.plist */,
 				9A01A3591C6F5F5200A2A466 /* GDUnixSocketTests.m */,
 				9A8F3FB11C6FD4B000768D25 /* GDUnixSocketServerTests.m */,
+				FA350BC71C72312400E00B03 /* GDUnixSocketTestCommon.h */,
+				FA350BC51C7230A900E00B03 /* GDUnixSocketTestCommon.m */,
 				9A8F3FB51C6FD4F700768D25 /* Common.h */,
 				9A8F3FB61C6FD4F700768D25 /* Common.m */,
+				FA350BC81C72320E00E00B03 /* GDUnixSocketClientTest.m */,
 			);
 			path = GDUnixSocketExampleTests;
 			sourceTree = "<group>";
@@ -279,9 +287,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA350BC61C7230A900E00B03 /* GDUnixSocketTestCommon.m in Sources */,
 				9A8F3FB71C6FD4F700768D25 /* Common.m in Sources */,
 				9A8F3FB21C6FD4B000768D25 /* GDUnixSocketServerTests.m in Sources */,
 				9A01A35A1C6F5F5200A2A466 /* GDUnixSocketTests.m in Sources */,
+				FA350BC91C72320E00E00B03 /* GDUnixSocketClientTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

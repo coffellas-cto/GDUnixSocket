@@ -9,5 +9,17 @@
 #ifndef GDUnixSocketTestCommon_h
 #define GDUnixSocketTestCommon_h
 
+#import <XCTest/XCTest.h>
+#import "GDUnixSocketServer.h"
+#import "Common.h"
+
+@class GDUnixSocketServer;
+
+@interface GDUnixSocketTestCommon : XCTestCase
+
+- (GDUnixSocketServer *)startedServer;
+
+@end
+
 
 #endif /* GDUnixSocketTestCommon_h */
