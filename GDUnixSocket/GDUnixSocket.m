@@ -301,7 +301,7 @@ NSString * const kGDDummySocketPath = @"(dummy)";
                 return nil;
             }
             
-            if (![standardizedPath containsString:@"/"]) {
+            if (![standardizedPath rangeOfString:@"/"].length) {
                 return nil;
             }
         }
