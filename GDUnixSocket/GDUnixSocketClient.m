@@ -73,7 +73,7 @@
     if (retVal) {
         self.state = GDUnixSocketStateConnected;
         if (autoRead) {
-            [self readNext];
+            [self readLoop];
         }
     }
     
@@ -109,14 +109,15 @@
 
 #pragma mark - Private Methods
 
-- (void)readNext {
-    [self readWithCompletion:^(NSError *error, NSData *data) {
-        if (data) {
-            [self readNext];
-        } else {
-            [self close];
-        }
-    }];
+- (void)readLoop {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *readData = nil;
+        do {
+            readData = [self readWithError:nil];
+        } while (readData);
+        
+        [self close];
+    });
 }
 
 @end
