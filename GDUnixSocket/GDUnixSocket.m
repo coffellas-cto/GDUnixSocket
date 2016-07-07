@@ -162,7 +162,10 @@ NSString * const kGDDummySocketPath = @"(dummy)";
     
     BOOL retVal = NO;
     NSError *retError = [self checkForBadSocket];
-    if (!retError) {
+    if (retError) {
+        NSString *tmpDescription = retError.localizedDescription;
+        retError = [NSError gduds_errorForCode:GDUnixSocketErrorClose info:tmpDescription];
+    } else {
         retVal = close([self fd]) != -1;
         if (!retVal) {
             retError = [NSError gduds_errorForCode:GDUnixSocketErrorClose info:[self lastErrorInfo]];

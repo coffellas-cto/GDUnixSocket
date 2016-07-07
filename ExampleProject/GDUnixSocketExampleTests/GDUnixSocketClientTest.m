@@ -38,7 +38,7 @@
 }
 
 - (void)testConnectAutoRead {
-    [self startedServer];
+    GDUnixSocketServer *server = [self startedServer];
     GDUnixSocketClient *client = [[GDUnixSocketClient alloc] initWithSocketPath:gTestSocketPath];
     XCTAssertNotNil(client);
     
@@ -50,6 +50,10 @@
     BOOL closed = [client closeWithError:&error];
     XCTAssertTrue(closed);
     XCTAssertNil(error);
+    
+    
+    closed = [server close];
+    XCTAssertTrue(closed);
 }
 
 @end
