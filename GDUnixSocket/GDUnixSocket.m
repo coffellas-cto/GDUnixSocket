@@ -193,23 +193,24 @@ NSString * const kGDDummySocketPath = @"(dummy)";
     NSData *retVal = nil;
     NSError *retError = nil;
     size_t buffer_size = self.fragmentSize;
-    char *buffer = calloc(buffer_size, sizeof(char));
+    uint8_t *buffer = calloc(buffer_size, sizeof(uint8_t));
     ssize_t bytes_read = read(socket_fd, buffer, buffer_size);
     if (bytes_read == -1) {
         retError = [NSError gduds_errorForCode:GDUnixSocketErrorSocketRead info:[self lastErrorInfoForSocket:socket_fd]];
     } else {
         GDUnixSocketLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
-        if (bytes_read) {
-            // TODO: Use no copy
-            retVal = [NSData dataWithBytes:buffer length:bytes_read];
-        }
+    }
+    
+    if (bytes_read > 0) {
+        retVal = [NSData dataWithBytesNoCopy:buffer length:bytes_read freeWhenDone:YES];
+    } else {
+        free(buffer);
     }
     
     if (error) {
         *error = retError;
     }
     
-    free(buffer);
     return retVal;
 }
 
