@@ -198,6 +198,7 @@ NSString * const kGDDummySocketPath = @"(dummy)";
     } else {
         GDUnixSocketLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
         if (bytes_read) {
+            // TODO: Use no copy
             retVal = [NSData dataWithBytes:buffer length:bytes_read];
         }
     }
