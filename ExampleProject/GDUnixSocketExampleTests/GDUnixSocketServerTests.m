@@ -35,12 +35,13 @@
     
     _server.delegate = self;
     
-    NSError *error;
+    NSError *error = [NSError errorWithDomain:@"" code:-1000 userInfo:nil];
     BOOL started = [_server listenWithError:&error];
     XCTAssertTrue(started);
     XCTAssertNil(error);
     XCTAssertEqual(_server.state, GDUnixSocketStateListening);
     
+    error = [NSError errorWithDomain:@"" code:-1000 userInfo:nil];
     BOOL closed = [_server closeWithError:&error];
     XCTAssertTrue(closed);
     XCTAssertNil(error);
@@ -57,7 +58,7 @@
     GDUnixSocketServer *server = [self startedServer];
     BOOL closed = [server close];
     XCTAssertTrue(closed);
-    NSError *error;
+    NSError *error = [NSError errorWithDomain:@"" code:-1000 userInfo:nil];
     closed = [server closeWithError:&error];
     XCTAssertTrue(closed);
     XCTAssertNil(error);

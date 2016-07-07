@@ -95,6 +95,10 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
         return failureDeferBlock([NSError gduds_errorForCode:GDUnixSocketErrorListen info:[self lastErrorInfo]]);
     }
     
+    if (error) {
+        *error = nil;
+    }
+    
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [weakSelf mainLoop];
@@ -111,6 +115,10 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 
 - (ssize_t)sendData:(NSData *)data toClientWithID:(NSString *)clientID error:(NSError **)error {
     @synchronized(self) {
+        if (error) {
+            *error = nil;
+        }
+        
         GDUnixSocket *client = self.connectedClients[clientID];
         if (!client) {
             if (error) {
@@ -137,6 +145,9 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
 #pragma mark - Overrides
 
 - (ssize_t)writeData:(NSData *)data error:(NSError **)error {
+    if (error) {
+        *error = nil;
+    }
     return 0;
 }
 
@@ -166,7 +177,7 @@ const int kGDUnixSocketServerMaxConnectionsDefault = 5;
     
     [self.closeLock unlock];
     
-    if (retError && error) {
+    if (error) {
         *error = retError;
     }
     

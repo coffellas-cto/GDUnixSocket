@@ -66,7 +66,7 @@
         }
     }
     
-    if (retError && error) {
+    if (error) {
         *error = retError;
     }
     
@@ -94,14 +94,14 @@
         if ([self.delegate respondsToSelector:@selector(unixSocketClient:didFailToReadWithError:)]) {
             [self.delegate unixSocketClient:self didFailToReadWithError:readError];
         }
-        
-        if (error) {
-            *error = readError;
-        }
     } else if (data) {
         if ([self.delegate respondsToSelector:@selector(unixSocketClient:didReceiveData:)]) {
             [self.delegate unixSocketClient:self didReceiveData:data];
         }
+    }
+    
+    if (error) {
+        *error = readError;
     }
     
     return data;

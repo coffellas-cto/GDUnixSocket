@@ -176,7 +176,7 @@ NSString * const kGDDummySocketPath = @"(dummy)";
         [self setFd:kGDBadSocketFD];
     }
     
-    if (retError && error) {
+    if (error) {
         *error = retError;
     }
     
@@ -191,13 +191,12 @@ NSString * const kGDDummySocketPath = @"(dummy)";
 
 - (NSData *)readFromSocket:(dispatch_fd_t)socket_fd error:(NSError **)error {
     NSData *retVal = nil;
+    NSError *retError = nil;
     size_t buffer_size = self.fragmentSize;
     char *buffer = calloc(buffer_size, sizeof(char));
     ssize_t bytes_read = read(socket_fd, buffer, buffer_size);
     if (bytes_read == -1) {
-        if (error) {
-            *error = [NSError gduds_errorForCode:GDUnixSocketErrorSocketRead info:[self lastErrorInfoForSocket:socket_fd]];
-        }
+        retError = [NSError gduds_errorForCode:GDUnixSocketErrorSocketRead info:[self lastErrorInfoForSocket:socket_fd]];
     } else {
         GDUnixSocketLog(@"read %zd bytes from socket [%d]: %s", bytes_read, socket_fd, buffer);
         if (bytes_read) {
@@ -206,11 +205,19 @@ NSString * const kGDDummySocketPath = @"(dummy)";
         }
     }
     
+    if (error) {
+        *error = retError;
+    }
+    
     free(buffer);
     return retVal;
 }
 
 - (ssize_t)write:(NSData *)data toSocket:(dispatch_fd_t)socket_fd error:(NSError **)error {
+    if (error) {
+        *error = nil;
+    }
+    
     if (!data || !data.length) {
         return 0;
     }

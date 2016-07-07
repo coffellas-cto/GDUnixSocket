@@ -24,7 +24,7 @@
     GDUnixSocketServer *server = [[GDUnixSocketServer alloc] initWithSocketPath:gTestSocketPath];
     XCTAssertNotNil(server);
     
-    NSError *error;
+    NSError *error = [NSError errorWithDomain:@"" code:-1000 userInfo:nil];
     BOOL started = [server listenWithError:&error];
     XCTAssertTrue(started);
     XCTAssertNil(error);

@@ -42,11 +42,12 @@
     GDUnixSocketClient *client = [[GDUnixSocketClient alloc] initWithSocketPath:gTestSocketPath];
     XCTAssertNotNil(client);
     
-    NSError *error;
+    NSError *error = [NSError errorWithDomain:@"" code:-1000 userInfo:nil];
     BOOL connected = [client connectWithAutoRead:YES error:&error];
     XCTAssertTrue(connected);
     XCTAssertNil(error);
     
+    error = [NSError errorWithDomain:@"" code:-1000 userInfo:nil];
     BOOL closed = [client closeWithError:&error];
     XCTAssertTrue(closed);
     XCTAssertNil(error);
