@@ -252,7 +252,7 @@ NSString * const kGDDummySocketPath = @"(dummy)";
 
 - (NSError *)checkForBadSocket:(dispatch_fd_t)socket_fd {
     if (socket_fd == kGDBadSocketFD) {
-        [NSError gduds_errorForCode:GDUnixSocketErrorBadSocket];
+        return [NSError gduds_errorForCode:GDUnixSocketErrorBadSocket];
     }
     
     return nil;
