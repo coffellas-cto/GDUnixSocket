@@ -93,7 +93,7 @@ So, you can send data to a client described by this identifier by calling `sendD
 ```
 
 ###5. Reading
-You can explicitly call `readWithError:` or `readWithCompletion:` on both your client and server object in order to read a incoming data.
+You can explicitly call `readWithError:` or `readWithCompletion:` on both your client and server object in order to read incoming data.
 
 You generally don't have to do so for servers and for a client which was connected with `autoRead` flag set. You rather set delegate objects and receive data when the corresponding methods are called. See **6** for the list of methods supported by delegates.
 
