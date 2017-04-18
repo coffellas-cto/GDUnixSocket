@@ -3,7 +3,7 @@ Unix Domain Sockets for Objective-C
 
 ![screen_record](https://cloud.githubusercontent.com/assets/3193877/13028486/1de4f2a0-d279-11e5-9dff-beb4067829bc.gif)
 
-##About
+## About
 Unix domain sockets are designed specifically for local interprocess communication. See [this](http://man7.org/linux/man-pages/man7/unix.7.html) for clarification.
 
 `GDUnixSocket` framework is an Objective-C object-oriented wrapper around unix sockets which allows you to abstract away from file descriptors and system calls. You can also use it for communication between any entities within one process.
@@ -12,7 +12,7 @@ All calls are blocking for now. But there are asynchronous variants of methods w
 
 There is a complete example project for your convinience.
 
-##Usage
+## Usage
 The framework consists of three main classes:
 
 * `GDUnixSocket` - base class. Generally you don't use it as it implements only read/write operations but not the actual creation of a socket.
@@ -21,7 +21,7 @@ The framework consists of three main classes:
 
 *For the complete documentation of every method see source code*.
 
-###1. Initialization
+### 1. Initialization
 
 The main channel of communication for both of these working classes is the actual file located somewhere in your file system. In order to initialize client or server you have to pass a path to this file as a parameter to initializer. For example:
 
@@ -36,7 +36,7 @@ Beware that your process **must** have access rights to read and write to the di
 
 Also note that path to the socket is limited to the size of `sun_path` field of `struct	sockaddr_un` imported from `<sys/un.h>` file. Check its value for your platform.
 
-###2. Starting a server
+### 2. Starting a server
 Follow this rule: first you run server, then you connect clients. In order to start a server you have to create and and initialize an object of `GDUnixSocketServer` class as described in **1**.
 
 Upon success of initialization you can start listening on newly created socket by calling one of the `listenWithMaxConnections:error:` or `listenWithError:` methods:
@@ -54,7 +54,7 @@ if ([self.server listenWithError:&error]) {
 
 You can set a delegate object for your server (which conforms to `GDUnixSocketServerDelegate` protocol) to observe different events including but not limited to: new client connected, a client disconnected, server stopped, etc. For complete listing of these methods see **6**.
 
-###3. Connecting a client.
+### 3. Connecting a client.
 After your server is set up and listening you can freely create a client (as described in **1**) and try to connect to server:
 
 ```objc
@@ -71,7 +71,7 @@ If `autoRead` flag is set, upon successful connection it immediately starts asyn
 
 Setting a delegate object which conforms to `GDUnixSocketClientDelegate` protocol allows you to receive data from server and observe reading errors. See **6** for its methods.
 
-###4. Writing
+### 4. Writing
 You can write data to a **client** connection using synchronous `writeData:error:` or asynchronous `writeData:completion:`.
 
 There is no meaning in writing data to **server** connection, but you can send data to one of the clients connected to that server.
@@ -92,12 +92,12 @@ So, you can send data to a client described by this identifier by calling `sendD
 }
 ```
 
-###5. Reading
+### 5. Reading
 You can explicitly call `readWithError:` or `readWithCompletion:` on both your client and server object in order to read incoming data.
 
 You generally don't have to do so for servers and for a client which was connected with `autoRead` flag set. You rather set delegate objects and receive data when the corresponding methods are called. See **6** for the list of methods supported by delegates.
 
-###6. Protocols
+### 6. Protocols
 Protocol of `GDUnixSocketClient`'s delegate:
 
 ```objc
@@ -123,10 +123,10 @@ Protocol of `GDUnixSocketServer`'s delegate:
 @end
 ```
 
-###7. Closing
+### 7. Closing
 In order to close server or client you just call `close` or `closeWithError:`.
 
-###8. Other
+### 8. Other
 Define `GD_UNIX_SOCKET_DEBUG` macro to see additional debug information.
 
 ##TODO
